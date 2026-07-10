@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Complaint Management System</title>
+
+    <title>ECMS | Login</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
@@ -13,38 +14,54 @@
 <body>
 
     <div class="login-container">
-
         <div class="logo">
             <img src="{{ url_for('static', filename='images/company_logo.png') }}" alt="Company Logo">
         </div>
 
         <h1>Employee Complaint Management System</h1>
-
         <p class="subtitle">
             Sign in using your company credentials
         </p>
 
-        <form action="employee_dashboard.html" method="GET">
-
+        <form action="#" method="POST">
             <div class="form-group">
                 <label for="username">Employee ID / Email</label>
-                <input type="text" id="username" name="username" placeholder="Enter Employee ID or Email" required>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Enter Employee ID or Email"
+                    autocomplete="username"
+                    required>
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter Password" required>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter Password"
+                    autocomplete="current-password"
+                    required>
             </div>
 
-            <p class="forgot-password">
-                Forgot Password? Please contact <strong>IT Support.</strong>
-            </p>
+            <div class="forgot-password">
+                <a href="{{ url_for('it_support') }}">
+                    Forgot Password?
+                </a>
+            </div>
 
             <button type="submit" class="login-btn">
                 Login
             </button>
 
         </form>
+
+        <footer>
+            © 2026 Bonanza Satrangi | Employee Complaint Management System
+        </footer>
 
     </div>
 
