@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECMS | My Complaints</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/complaints.css') }}">
+
+</head>
+<body>
+
+
+    <!-- HEADER -->
+
+    <header class="top-header">
+        <div class="brand">
+            <img src="{{ url_for('static', filename='images/company_logo.png') }}">
+            <div>
+
+                <h2>
+                    Employee Complaint Management System
+                </h2>
+
+                <p>
+                    My Complaints
+                </p>
+
+            </div>
+
+        </div>
+        <a href="{{ url_for('employee_dashboard') }}" class="back-link">
+            ← Dashboard
+        </a>
+
+
+    </header>
+    <!-- MAIN -->
+
+    <main class="complaints-page">
+        <div class="page-heading">
+
+            <h1>
+                My Complaints
+            </h1>
+
+
+            <p>
+                Track the progress of your submitted complaints.
+            </p>
+
+
+        </div>
+        <!-- SEARCH AREA -->
+
+
+        <div class="filter-box">
+
+            <input type="text" placeholder="Search complaint...">
+
+
+            <select>
+
+                <option>
+                    All Status
+                </option>
+
+
+                <option>
+                    Pending
+                </option>
+
+
+                <option>
+                    In Progress
+                </option>
+
+
+                <option>
+                    Resolved
+                </option>
+
+
+            </select>
+
+
+        </div>
+
+        <!-- TABLE -->
+
+
+        <div class="table-container">
+
+
+            <table>
+
+
+                <thead>
+
+
+                    <tr>
+
+                        <th>
+                            Ticket ID
+                        </th>
+
+
+                        <th>
+                            Subject
+                        </th>
+
+
+                        <th>
+                            Category
+                        </th>
+
+
+                        <th>
+                            Date
+                        </th>
+
+
+                        <th>
+                            Status
+                        </th>
+
+
+                        <th>
+                            Remarks
+                        </th>
+
+
+                    </tr>
+
+
+                </thead>
+
+                <tbody>
+
+
+
+                    <tr>
+
+
+                        <td>
+                            ECMS-1001
+                        </td>
+
+
+                        <td>
+                            Laptop not starting
+                        </td>
+
+
+                        <td>
+                            Hardware
+                        </td>
+
+
+                        <td>
+                            10 July 2026
+                        </td>
+
+
+                        <td>
+
+                            <span class="status pending">
+                                Pending
+                            </span>
+
+                        </td>
+
+
+                        <td>
+                            Waiting for IT review
+                        </td>
+
+
+                    </tr>
+
+                    <tr>
+
+
+                        <td>
+                            ECMS-1002
+                        </td>
+
+
+                        <td>
+                            Email access issue
+                        </td>
+
+
+                        <td>
+                            Access
+                        </td>
+
+
+                        <td>
+                            08 July 2026
+                        </td>
+
+
+                        <td>
+
+                            <span class="status progress">
+                                In Progress
+                            </span>
+
+                        </td>
+
+
+                        <td>
+                            Assigned to IT Team
+                        </td>
+
+
+                    </tr>
+                    <tr>
+
+
+                        <td>
+                            ECMS-0998
+                        </td>
+
+
+                        <td>
+                            Printer problem
+                        </td>
+
+
+                        <td>
+                            Hardware
+                        </td>
+
+
+                        <td>
+                            01 July 2026
+                        </td>
+
+
+                        <td>
+
+                            <span class="status resolved">
+                                Resolved
+                            </span>
+
+
+                        </td>
+
+
+                        <td>
+                            Printer driver updated
+                        </td>
+
+
+                    </tr>
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+    </main>
+
+    <footer>
+
+        © 2026 Bonanza Satrangi | Employee Complaint Management System
+
+    </footer>
+</body>
+
+</html>
