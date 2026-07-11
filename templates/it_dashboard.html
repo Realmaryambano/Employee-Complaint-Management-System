@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECMS | IT Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+
+<body>
+   <!-- HEADER -->
+    <header class="top-header">
+        <div class="brand">
+            <img src="{{ url_for('static', filename='images/company_logo.png') }}">
+            <div>
+                <h2>
+                    Employee Complaint Management System
+                </h2>
+
+                <p>
+                    IT Admin Dashboard
+                </p>
+
+            </div>
+        </div>
+
+        <div class="admin-actions">
+
+
+            <span>
+                Welcome, IT Admin
+            </span>
+
+            <a href="{{ url_for('login') }}" class="logout-btn">
+
+                Logout
+
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+
+    <main class="admin-page">
+        <div class="page-heading">
+            <h1>
+                Complaint Management
+            </h1>
+            <p>
+                Review, assign, and resolve employee complaints.
+            </p>
+        </div>
+
+        <!-- FILTER -->
+
+        <div class="filter-box">
+            <input type="text" placeholder="Search by Ticket ID or Subject">
+            <select>
+                <option>
+                    All Categories
+                </option>
+                <option>
+                    Hardware
+                </option>
+                <option>
+                    Software
+                </option>
+
+                <option>
+                    Network
+                </option>
+
+                <option>
+                    Access
+                </option>
+
+
+            </select>
+            <select>
+
+                <option>
+                    All Status
+                </option>
+                <option>
+                    Pending
+                </option>
+
+
+                <option>
+                    In Progress
+                </option>
+                <option>
+                    Resolved
+                </option>
+
+
+            </select>
+        </div>
+        <!-- TABLE -->
+
+        <div class="table-container">
+
+
+            <table>
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Ticket ID
+                        </th>
+
+
+                        <th>
+                            Employee
+                        </th>
+
+
+                        <th>
+                            Category
+                        </th>
+
+
+                        <th>
+                            Subject
+                        </th>
+
+
+                        <th>
+                            Priority
+                        </th>
+
+
+                        <th>
+                            Status
+                        </th>
+
+
+                        <th>
+                            Action
+                        </th>
+
+
+                    </tr>
+
+
+                </thead>
+                <tbody>
+
+
+                    <tr>
+
+
+                        <td>
+                            ECMS-1001
+                        </td>
+
+
+                        <td>
+                            Ahmed Khan
+                        </td>
+
+
+                        <td>
+                            Hardware
+                        </td>
+
+
+                        <td>
+                            Laptop not starting
+                        </td>
+
+
+                        <td>
+                            High
+                        </td>
+
+
+                        <td>
+
+                            <span class="status pending">
+                                Pending
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <a href="{{ url_for('complaint_details') }}" class="view-btn">
+
+                                View
+
+                            </a>
+
+                        </td>
+
+
+                    </tr>
+
+                    <tr>
+
+
+                        <td>
+                            ECMS-1002
+                        </td>
+
+
+                        <td>
+                            Sara Ali
+                        </td>
+
+
+                        <td>
+                            Network
+                        </td>
+
+
+                        <td>
+                            Internet issue
+                        </td>
+
+
+                        <td>
+                            Medium
+                        </td>
+
+
+                        <td>
+
+                            <span class="status progress">
+                                In Progress
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <a href="{{ url_for('complaint_details') }}" class="view-btn">
+
+                                View
+
+                            </a>
+
+                        </td>
+
+
+                    </tr>
+                    <tr>
+
+
+                        <td>
+                            ECMS-1003
+                        </td>
+
+
+                        <td>
+                            Bilal Ahmed
+                        </td>
+                        <td>
+                            Software
+                        </td>
+                        <td>
+                            ERP login problem
+                        </td>
+                        <td>
+                            Critical
+                        </td>
+                        <td>
+
+                            <span class="status resolved">
+                                Resolved
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <a href="{{ url_for('complaint_details') }}" class="view-btn">
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <footer>
+
+        © 2026 Bonanza Satrangi | Employee Complaint Management System
+
+    </footer>
+</body>
+
+</html>

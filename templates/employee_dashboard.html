@@ -1,11 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+
+    <title>ECMS | Employee Dashboard</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/employee.css') }}">
+
 </head>
+
 <body>
-    
+
+    <!-- ================= HEADER ================= -->
+
+    <header>
+
+        <div class="header-left">
+
+            <img src="{{ url_for('static', filename='images/company_logo.png') }}" alt="Company Logo">
+
+            <div class="header-text">
+                <h2>Employee Complaint Management System</h2>
+                <p>Employee Dashboard</p>
+            </div>
+
+        </div>
+
+        <div class="header-right">
+
+            <!-- This will later come from the database -->
+            <span class="welcome-text">
+                Welcome, Employee
+            </span>
+
+            <a href="{{ url_for('login') }}" class="logout-btn">
+                Logout
+            </a>
+
+        </div>
+
+    </header>
+
+    <!-- ================= MAIN ================= -->
+
+    <main>
+
+        <h1>Main Menu</h1>
+
+        <p class="subtitle">
+            Select an option below to continue.
+        </p>
+
+        <div class="menu-container">
+
+            <!-- Write Complaint -->
+
+            <a href="{{ url_for('complaint_form') }}" class="menu-card">
+
+                <div class="card-icon">
+                    📝
+                </div>
+
+                <div class="card-title">
+                    Write Complaint
+                </div>
+
+                <div class="card-description">
+                    Raise a new complaint or service request for the IT Department.
+                </div>
+
+            </a>
+
+            <!-- My Complaints -->
+
+            <a href="{{ url_for('my_complaints') }}" class="menu-card">
+
+                <div class="card-icon">
+                    📋
+                </div>
+
+                <div class="card-title">
+                    My Complaints
+                </div>
+
+                <div class="card-description">
+                    View and track the status of your submitted complaints.
+                </div>
+
+            </a>
+
+        </div>
+
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        © 2026 Bonanza Satrangi | Employee Complaint Management System
+
+    </footer>
+
 </body>
+
 </html>
