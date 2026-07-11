@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ECMS | Complaint Details</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/details.css') }}">
+
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="top-header">
+        <div class="brand">
+            <img src="{{ url_for('static', filename='images/company_logo.png') }}">
+            <div>
+                <h2>
+                    Employee Complaint Management System
+                </h2>
+
+                <p>
+                    Complaint Details
+                </p>
+            </div>
+        </div>
+        <a href="{{ url_for('it_dashboard') }}" class="back-link">
+            ← Back to Dashboard
+        </a>
+    </header>
+
+
+
+
+
+
+
+    <!-- MAIN -->
+    <main class="details-page">
+        <div class="page-heading">
+            <h1>
+                Complaint #ECMS-1001
+            </h1>
+            <p>
+                Review complaint information and update status.
+            </p>
+        </div>
+
+
+
+        <div class="details-layout">
+            <!-- LEFT SECTION -->
+            <section class="details-card">
+                <div class="section-title">
+                    <h2>
+                        Complaint Information
+                    </h2>
+                </div>
+
+                <div class="detail-grid">
+                    <div>
+                        <label>
+                            Employee Name
+                        </label>
+                        <p>
+                            Ahmed Khan
+                        </p>
+                    </div>
+                    <div>
+                        <label>
+                            Employee ID
+                        </label>
+                        <p>
+                            EMP002
+                        </p>
+                    </div>
+
+                    <div>
+                        <label>
+                            Department
+                        </label>
+
+                        <p>
+                            Sales Department
+                        </p>
+                    </div>
+
+                    <div>
+                        <label>
+                            Category
+                        </label>
+
+                        <p>
+                            Hardware
+                        </p>
+
+                    </div>
+
+                    <div>
+                        <label>
+                            Priority
+                        </label>
+
+                        <p>
+                            High
+                        </p>
+                    </div>
+
+                    <div>
+
+                        <label>
+                            Submitted Date
+                        </label>
+
+                        <p>
+                            10 July 2026
+                        </p>
+
+                    </div>
+                </div>
+
+                <div class="description-box">
+
+                    <label>
+                        Complaint Description
+                    </label>
+
+                    <p>
+                        Laptop is not starting. Employee tried restarting
+                        but system is not responding.
+                    </p>
+                </div>
+
+                <div class="attachment-box">
+                    <label>
+                        Attachment</label>
+                    <p>
+                        No attachment uploaded.
+                    </p>
+                </div>
+            </section>
+
+            <!-- RIGHT SECTION -->
+
+            <section class="action-card">
+                <div class="section-title">
+
+                    <h2>
+                        Update Complaint
+                    </h2>
+
+                </div>
+                <form>
+                    <div class="form-group">
+
+                        <label>
+                            Change Status
+                        </label>
+
+
+                        <select>
+
+
+                            <option>
+                                Pending
+                            </option>
+
+
+                            <option>
+                                In Progress
+                            </option>
+
+
+                            <option>
+                                Resolved
+                            </option>
+
+
+                        </select>
+
+
+                    </div>
+
+
+                    <div class="form-group">
+
+
+                        <label>
+                            Add Remarks
+                        </label>
+
+
+                        <textarea rows="6" placeholder="Write update remarks..."></textarea>
+
+
+                    </div>
+
+                    <button type="submit">
+
+                        Save Changes
+
+                    </button>
+
+                </form>
+            </section>
+        </div>
+
+    </main>
+
+
+    <footer>
+
+        © 2026 Bonanza Satrangi | Employee Complaint Management System
+
+    </footer>
+
+</body>
+
+</html>
