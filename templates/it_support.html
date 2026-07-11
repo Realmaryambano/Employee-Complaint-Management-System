@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ECMS | IT Support</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <!-- Logo -->
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/company_logo.png') }}" alt="Company Logo">
+        </div>
+
+        <!-- Heading -->
+        <h1>IT Support</h1>
+        <p class="subtitle">
+            Having trouble signing in? We're here to help.
+        </p>
+
+        <!-- Support Information -->
+        <div class="support-details">
+            <div class="support-item">
+                <h3>Email</h3>
+                <p>itsupport@bonanzasatrangi.com</p>
+            </div>
+
+            <div class="support-item">
+                <h3>Extension</h3>
+                <p>1234</p>
+            </div>
+
+            <div class="support-item">
+                <h3>Working Hours</h3>
+                <p>Monday - Saturday</p>
+                <p>8:00 AM - 5:30 PM</p>
+            </div>
+
+        </div>
+
+        <!-- Back Button -->
+        <a href="{{ url_for('login') }}" class="back-btn">
+            ← Back to Login
+        </a>
+
+        <footer>
+            © 2026 Bonanza Satrangi | Employee Complaint Management System
+        </footer>
+
+    </div>
+
+</body>
+
+</html>
