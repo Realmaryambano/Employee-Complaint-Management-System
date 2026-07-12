@@ -5,12 +5,9 @@
 body{
 
     display:flex;
-
     justify-content:center;
     align-items:center;
-
     min-height:100vh;
-
     padding:20px;
 
 }
@@ -20,22 +17,14 @@ body{
 ------------------------ */
 
 .login-container{
-
     width:100%;
     max-width:430px;
-
     background:white;
-
     padding:40px;
-
     border-radius:15px;
-
     border-top:5px solid #2563EB;
-
     box-shadow:0 10px 30px rgba(37,99,235,.15);
-
     animation:slideUp .7s ease;
-
 }
 
 /* -----------------------
@@ -43,21 +32,14 @@ body{
 ------------------------ */
 
 .logo{
-
     text-align:center;
-
     margin-bottom:20px;
-
 }
 
 .logo img{
-
     width:90px;
-
     max-width:100%;
-
     animation:fadeIn 1s ease;
-
 }
 
 /* -----------------------
@@ -65,25 +47,16 @@ body{
 ------------------------ */
 
 h1{
-
     text-align:center;
-
     color:#2563EB;
-
     font-size:28px;
-
     margin-bottom:10px;
-
 }
 
 .subtitle{
-
     text-align:center;
-
     color:#666;
-
     margin-bottom:30px;
-
 }
 
 /* -----------------------
@@ -91,19 +64,13 @@ h1{
 ------------------------ */
 
 .form-group{
-
     margin-bottom:20px;
-
 }
 
 label{
-
     display:block;
-
     margin-bottom:8px;
-
     font-weight:600;
-
 }
 
 /* -----------------------
@@ -111,31 +78,21 @@ label{
 ------------------------ */
 
 .forgot-password{
-
     text-align:right;
-
     margin-bottom:25px;
-
 }
 
 .forgot-password a{
-
     text-decoration:none;
-
     color:#2563EB;
-
     font-size:14px;
-
     transition:.3s;
 
 }
 
 .forgot-password a:hover{
-
     color:#1D4ED8;
-
     text-decoration:underline;
-
 }
 
 /* -----------------------
@@ -143,33 +100,21 @@ label{
 ------------------------ */
 
 .login-btn{
-
     width:100%;
-
     padding:13px;
-
     background:#2563EB;
-
     color:white;
-
     border:none;
-
     border-radius:8px;
-
     font-size:16px;
-
     font-weight:600;
-
     box-shadow:0 4px 12px rgba(37,99,235,.20);
 
 }
 
 .login-btn:hover{
-
     background:#1D4ED8;
-
     transform:translateY(-2px);
-
 }
 
 /* -----------------------
@@ -177,15 +122,10 @@ label{
 ------------------------ */
 
 footer{
-
     margin-top:30px;
-
     text-align:center;
-
     color:#888;
-
     font-size:13px;
-
 }
 
 /* -----------------------
@@ -193,37 +133,85 @@ footer{
 ------------------------ */
 
 @keyframes slideUp{
-
     from{
-
         opacity:0;
-
         transform:translateY(40px);
-
     }
 
     to{
-
         opacity:1;
-
         transform:translateY(0);
-
     }
-
 }
 
 @keyframes fadeIn{
-
     from{
-
         opacity:0;
-
     }
 
     to{
-
         opacity:1;
-
     }
+}
+/* -----------------------
+   IT Support
+------------------------ */
 
+.support-details{
+    margin:30px 0;
+}
+
+.support-item{
+    background:#F8FBFF;
+    border:1px solid #C5D8F7;
+    border-radius:10px;
+    padding:18px;
+    margin-bottom:15px;
+    transition:.3s;
+}
+
+.support-item:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 15px rgba(37,99,235,.12);
+}
+
+.support-item h3{
+    color:#2563EB;
+    margin-bottom:8px;
+    font-size:17px;
+}
+
+.support-item p{
+    color:#555555;
+    line-height:1.6;
+}
+
+/* -----------------------
+   Back Button
+------------------------ */
+
+.back-btn{
+    display:block;
+    width:100%;
+    text-align:center;
+    text-decoration:none;
+    background:#2563EB;
+    color:white;
+    padding:13px;
+    border-radius:8px;
+    font-weight:600;
+    transition:.3s;
+    box-shadow:0 4px 12px rgba(37,99,235,.20);
+}
+
+.back-btn:hover{
+    background:#1D4ED8;
+    transform:translateY(-2px);
+}
+
+.error-message{
+    color:#DC2626;
+    text-align:center;
+    margin-bottom:15px;
+    font-size:14px;
 }
