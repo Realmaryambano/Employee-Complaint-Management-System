@@ -1,0 +1,541 @@
+/* =====================================
+   COMPLAINT DETAILS PAGE
+===================================== */
+
+
+body{
+
+    background:#F8FAFC;
+
+}
+
+
+
+/* =====================================
+   HEADER
+===================================== */
+
+
+.top-header{
+
+    width:100%;
+
+    background:white;
+
+    border-bottom:1px solid #E2E8F0;
+
+    padding:18px 50px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+
+.brand{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+}
+
+
+
+.brand img{
+
+    width:55px;
+
+}
+
+
+
+.brand h2{
+
+    color:#1E293B;
+
+    font-size:20px;
+
+    font-weight:600;
+
+}
+
+
+
+.brand p{
+
+    color:#64748B;
+
+    font-size:14px;
+
+}
+
+
+
+.back-link{
+
+    text-decoration:none;
+
+    color:#2563EB;
+
+    font-size:14px;
+
+    font-weight:500;
+
+}
+
+
+.back-link:hover{
+
+    text-decoration:underline;
+
+}
+
+
+
+
+
+/* =====================================
+   MAIN
+===================================== */
+
+
+.details-page{
+
+    width:90%;
+
+    max-width:1200px;
+
+    margin:45px auto;
+
+    animation:fadeUp .5s ease;
+
+}
+
+
+
+
+
+.page-heading{
+
+    margin-bottom:30px;
+
+}
+
+
+
+.page-heading h1{
+
+    color:#1E293B;
+
+    font-size:28px;
+
+    font-weight:600;
+
+    margin-bottom:8px;
+
+}
+
+
+
+.page-heading p{
+
+    color:#64748B;
+
+}
+
+
+
+
+
+
+/* =====================================
+   TWO COLUMN LAYOUT
+===================================== */
+
+
+.details-layout{
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr;
+
+    gap:25px;
+
+}
+
+
+
+
+
+/* =====================================
+   CARDS
+===================================== */
+
+
+.details-card,
+.action-card{
+
+    background:white;
+
+    border:1px solid #E2E8F0;
+
+    padding:30px;
+
+}
+
+
+
+
+
+
+.section-title{
+
+    border-bottom:1px solid #E2E8F0;
+
+    padding-bottom:12px;
+
+    margin-bottom:25px;
+
+}
+
+
+
+.section-title h2{
+
+    color:#2563EB;
+
+    font-size:18px;
+
+    font-weight:600;
+
+}
+
+
+
+
+
+/* =====================================
+   INFORMATION GRID
+===================================== */
+
+
+.detail-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:25px;
+
+}
+
+
+
+.detail-grid label,
+.description-box label,
+.attachment-box label{
+
+
+    display:block;
+
+    color:#64748B;
+
+    font-size:13px;
+
+    margin-bottom:6px;
+
+    font-weight:500;
+
+}
+
+
+
+.detail-grid p{
+
+    color:#1E293B;
+
+    font-size:15px;
+
+    font-weight:500;
+
+}
+
+
+
+
+
+/* =====================================
+   DESCRIPTION
+===================================== */
+
+
+.description-box{
+
+    margin-top:30px;
+
+    padding-top:20px;
+
+    border-top:1px solid #E2E8F0;
+
+}
+
+
+
+.description-box p{
+
+    color:#475569;
+
+    line-height:1.6;
+
+}
+
+
+
+
+
+/* =====================================
+   ATTACHMENT
+===================================== */
+
+
+.attachment-box{
+
+    margin-top:25px;
+
+    padding-top:20px;
+
+    border-top:1px solid #E2E8F0;
+
+}
+
+
+
+.attachment-box p{
+
+    color:#64748B;
+
+}
+
+
+
+
+
+/* =====================================
+   FORM
+===================================== */
+
+
+.form-group{
+
+    margin-bottom:22px;
+
+}
+
+
+
+.form-group label{
+
+    display:block;
+
+    color:#334155;
+
+    font-size:14px;
+
+    font-weight:500;
+
+    margin-bottom:8px;
+
+}
+
+
+
+
+.form-group select,
+.form-group textarea{
+
+
+    width:100%;
+
+    padding:12px 14px;
+
+    border:1px solid #CBD5E1;
+
+    border-radius:6px;
+
+    font-size:14px;
+
+    outline:none;
+
+    color:#334155;
+
+}
+
+
+
+.form-group textarea{
+
+    resize:vertical;
+
+}
+
+
+
+
+
+.form-group select:focus,
+.form-group textarea:focus{
+
+    border-color:#2563EB;
+
+    box-shadow:0 0 0 3px rgba(37,99,235,.12);
+
+}
+
+
+
+
+
+/* =====================================
+   BUTTON
+===================================== */
+
+
+.action-card button{
+
+
+    width:100%;
+
+    background:#2563EB;
+
+    color:white;
+
+    border:none;
+
+    padding:13px;
+
+    border-radius:6px;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+
+
+.action-card button:hover{
+
+    background:#1D4ED8;
+
+}
+
+
+
+
+
+/* =====================================
+   FOOTER
+===================================== */
+
+
+footer{
+
+    text-align:center;
+
+    padding:25px;
+
+    color:#64748B;
+
+    font-size:14px;
+
+}
+
+
+
+
+
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+
+
+@media(max-width:900px){
+
+
+    .details-layout{
+
+        grid-template-columns:1fr;
+
+    }
+
+
+}
+
+
+
+@media(max-width:768px){
+
+
+    .top-header{
+
+        flex-direction:column;
+
+        gap:15px;
+
+        padding:20px;
+
+    }
+
+
+
+    .detail-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+
+}
+
+
+
+
+
+/* =====================================
+   ANIMATION
+===================================== */
+
+
+@keyframes fadeUp{
+
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(20px);
+
+    }
+
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+
+}
