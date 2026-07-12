@@ -1,0 +1,421 @@
+/* =====================================
+   MY COMPLAINTS PAGE
+===================================== */
+
+
+body{
+
+    background:#F8FAFC;
+
+}
+
+
+/* =====================================
+   HEADER
+===================================== */
+
+
+.top-header{
+
+    width:100%;
+
+    background:white;
+
+    border-bottom:1px solid #E2E8F0;
+
+    padding:18px 50px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+
+.brand{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+}
+
+
+.brand img{
+
+    width:55px;
+
+}
+
+
+.brand h2{
+
+    color:#1E293B;
+
+    font-size:20px;
+
+    font-weight:600;
+
+}
+
+
+.brand p{
+
+    color:#64748B;
+
+    font-size:14px;
+
+}
+
+
+.back-link{
+
+    color:#2563EB;
+
+    text-decoration:none;
+
+    font-size:14px;
+
+    font-weight:500;
+
+}
+
+
+.back-link:hover{
+
+    text-decoration:underline;
+
+}
+
+
+
+/* =====================================
+   MAIN
+===================================== */
+
+
+.complaints-page{
+
+    width:90%;
+
+    max-width:1200px;
+
+    margin:45px auto;
+
+    animation:fadeUp .5s ease;
+
+}
+
+
+
+.page-heading{
+
+    margin-bottom:30px;
+
+}
+
+
+.page-heading h1{
+
+    color:#1E293B;
+
+    font-size:28px;
+
+    font-weight:600;
+
+    margin-bottom:8px;
+
+}
+
+
+.page-heading p{
+
+    color:#64748B;
+
+}
+
+
+
+
+
+/* =====================================
+   FILTER AREA
+===================================== */
+
+
+.filter-box{
+
+    background:white;
+
+    border:1px solid #E2E8F0;
+
+    padding:20px;
+
+    display:flex;
+
+    gap:15px;
+
+    margin-bottom:25px;
+
+}
+
+
+
+.filter-box input,
+.filter-box select{
+
+
+    padding:11px 14px;
+
+    border:1px solid #CBD5E1;
+
+    border-radius:6px;
+
+    font-size:14px;
+
+    outline:none;
+
+}
+
+
+
+.filter-box input{
+
+    flex:1;
+
+}
+
+
+
+.filter-box input:focus,
+.filter-box select:focus{
+
+    border-color:#2563EB;
+
+}
+
+
+
+
+
+/* =====================================
+   TABLE
+===================================== */
+
+
+.table-container{
+
+    background:white;
+
+    border:1px solid #E2E8F0;
+
+    overflow-x:auto;
+
+}
+
+
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+
+
+thead{
+
+    background:#F1F5F9;
+
+}
+
+
+
+th{
+
+    text-align:left;
+
+    padding:15px;
+
+    color:#334155;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    border-bottom:1px solid #E2E8F0;
+
+}
+
+
+
+td{
+
+    padding:15px;
+
+    color:#475569;
+
+    font-size:14px;
+
+    border-bottom:1px solid #E2E8F0;
+
+}
+
+
+
+tbody tr:hover{
+
+    background:#F8FAFC;
+
+}
+
+
+
+
+
+/* =====================================
+   STATUS BADGES
+===================================== */
+
+
+.status{
+
+    padding:5px 12px;
+
+    border-radius:20px;
+
+    font-size:12px;
+
+    font-weight:600;
+
+}
+
+
+
+.pending{
+
+    background:#FEF3C7;
+
+    color:#92400E;
+
+}
+
+
+
+.progress{
+
+    background:#DBEAFE;
+
+    color:#1D4ED8;
+
+}
+
+
+
+.resolved{
+
+    background:#DCFCE7;
+
+    color:#166534;
+
+}
+
+
+
+
+
+/* =====================================
+   FOOTER
+===================================== */
+
+
+footer{
+
+    text-align:center;
+
+    color:#64748B;
+
+    padding:25px;
+
+    font-size:14px;
+
+}
+
+
+
+
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+
+
+@media(max-width:768px){
+
+
+    .top-header{
+
+        flex-direction:column;
+
+        gap:15px;
+
+        padding:20px;
+
+    }
+
+
+
+    .filter-box{
+
+        flex-direction:column;
+
+    }
+
+
+
+    .filter-box input{
+
+        width:100%;
+
+    }
+
+
+}
+
+
+
+
+
+/* =====================================
+   ANIMATION
+===================================== */
+
+
+@keyframes fadeUp{
+
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(20px);
+
+    }
+
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+
+}
