@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<title>ECMS | Complaint Submitted</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<div style="text-align:center; margin-top:100px;">
+
+
+<h1>
+Complaint Submitted Successfully!
+</h1>
+
+
+<p>
+Your complaint has been registered.
+</p>
+
+
+<h2>
+Ticket ID: {{ complaint_id }}
+</h2>
+
+
+<a href="{{ url_for('employee_dashboard') }}">
+Go to Dashboard
+</a>
+
+
+</div>
+
+
+</body>
+
+</html>

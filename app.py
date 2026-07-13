@@ -118,6 +118,9 @@ def employee_dashboard():
 # ==========================================
 # Complaint Form
 # ==========================================
+# ==========================================
+# Complaint Form
+# ==========================================
 
 @app.route("/complaint-form", methods=["GET", "POST"])
 def complaint_form():
@@ -132,25 +135,227 @@ def complaint_form():
     cursor = connection.cursor()
 
 
+
+    # ==========================
+    # Submit Complaint
+    # ==========================
+
+    if request.method == "POST":
+
+
+        issue_title = request.form["issue_title"]
+        category = request.form["category"]
+        priority = request.form["priority"]
+        store_location = request.form["store_location"]
+        contact_number = request.form["contact_number"]
+        device_name = request.form["device_name"]
+        description = request.form["description"]
+
+
+
+        cursor.execute("""
+            INSERT INTO Complaints
+            (
+                Employee_ID,
+                Issue_Title,
+                Category,
+                Priority,
+                Store_Location,
+                Contact_Number,
+                Device_Name,
+                Description
+            )
+
+            VALUES
+            (
+                :employee_id,
+                :issue_title,
+                :category,
+                :priority,
+                :store_location,
+                :contact_number,
+                :device_name,
+                :description
+            )
+        """,
+        employee_id=employee_id,
+        issue_title=issue_title,
+        category=category,
+        priority=priority,
+        store_location=store_location,
+        contact_number=contact_number,
+        device_name=device_name,
+        description=description
+        )
+
+
+
+        connection.commit()
+
+
+
+        # Get generated Complaint ID
+
+        cursor.execute("""
+            SELECT MAX(Complaint_ID)
+            FROM Complaints
+            WHERE Employee_ID = :employee_id
+        """,
+        employee_id=employee_id)
+
+
+        complaint_id = cursor.fetchone()[0]
+
+
+
+        cursor.close()
+        connection.close()
+
+
+
+        return render_template(
+            "complaint_success.html",
+            complaint_id=complaint_id
+        )
+
+
+
+
+    # ==========================
+    # Load Employee Information
+    # ==========================
+
+
     cursor.execute("""
         SELECT
             e.Employee_Name,
             e.Employee_ID,
             d.Department_Name,
             e.Email
+
         FROM Employees e
+
         JOIN Departments d
-            ON e.Department_ID = d.Department_ID
+        ON e.Department_ID = d.Department_ID
+
         WHERE e.Employee_ID = :employee_id
+
     """,
     employee_id=employee_id)
+
 
 
     employee = cursor.fetchone()
 
 
+
     cursor.close()
     connection.close()
+
+
+
+    return render_template(
+        "complaint_form.html",
+        employee=employee
+    )
+
+    # ==========================
+    # Submit Complaint
+    # ==========================
+
+    if request.method == "POST":
+
+
+        issue_title = request.form["issue_title"]
+        category = request.form["category"]
+        priority = request.form["priority"]
+        store_location = request.form["store_location"]
+        contact_number = request.form["contact_number"]
+        device_name = request.form["device_name"]
+        description = request.form["description"]
+
+
+
+        cursor.execute("""
+            INSERT INTO Complaints
+            (
+                Employee_ID,
+                Issue_Title,
+                Category,
+                Priority,
+                Store_Location,
+                Contact_Number,
+                Device_Name,
+                Description
+            )
+
+            VALUES
+            (
+                :employee_id,
+                :issue_title,
+                :category,
+                :priority,
+                :store_location,
+                :contact_number,
+                :device_name,
+                :description
+            )
+        """,
+        employee_id=employee_id,
+        issue_title=issue_title,
+        category=category,
+        priority=priority,
+        store_location=store_location,
+        contact_number=contact_number,
+        device_name=device_name,
+        description=description
+        )
+
+
+        connection.commit()
+
+
+        cursor.close()
+        connection.close()
+
+
+        return render_template(
+        "complaint_success.html",
+        complaint_id=cursor.lastrowid
+)
+
+
+
+    # ==========================
+    # Display Employee Data
+    # ==========================
+
+
+    cursor.execute("""
+        SELECT
+            e.Employee_Name,
+            e.Employee_ID,
+            d.Department_Name,
+            e.Email
+
+        FROM Employees e
+
+        JOIN Departments d
+        ON e.Department_ID = d.Department_ID
+
+        WHERE e.Employee_ID = :employee_id
+    """,
+    employee_id=employee_id)
+
+
+
+    employee = cursor.fetchone()
+
+
+
+    cursor.close()
+    connection.close()
+
 
 
     return render_template(

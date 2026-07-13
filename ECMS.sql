@@ -88,3 +88,5 @@ COMMIT;
 SELECT * FROM Departments;
 SELECT * FROM EMPLOYEES;
 SELECT * FROM Complaints;
+
+DESC Employees;
