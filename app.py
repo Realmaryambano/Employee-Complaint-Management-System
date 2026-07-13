@@ -1,12 +1,18 @@
-from flask import Flask, render_template, request, redirect, url_for
+from database.db import get_connection
+from flask import Flask, render_template, request, redirect, url_for, session
 
 app = Flask(__name__)
 
-# Needed later for sessions/authentication
+# ==========================================
+# Secret Key
+# ==========================================
+
 app.secret_key = "ecms_secret_key_2026"
-# ==========================
+
+
+# ==========================================
 # Login Page
-# ==========================
+# ==========================================
 
 @app.route("/", methods=["GET", "POST"])
 def login():
@@ -18,29 +24,42 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
+        connection = get_connection()
+        cursor = connection.cursor()
 
-        # Temporary Demo Authentication
-        # IT Admin
+        cursor.execute("""
+            SELECT Employee_ID, Role
+            FROM Employees
+            WHERE Email = :email
+            AND Password = :password
+        """,
+        email=username,
+        password=password)
 
-        if username == "admin@bonanza.com" and password == "admin123":
+        user = cursor.fetchone()
 
-            return redirect(url_for("it_dashboard"))
+        cursor.close()
+        connection.close()
 
+        if user:
 
+            employee_id = user[0]
+            role = user[1]
 
-        # Employee
+            session["employee_id"] = employee_id
+            session["role"] = role
 
-        elif username == "employee@bonanza.com" and password == "12345":
+            if role == "Admin":
 
-            return redirect(url_for("employee_dashboard"))
+                return redirect(url_for("it_dashboard"))
 
+            elif role == "Employee":
 
+                return redirect(url_for("employee_dashboard"))
 
         else:
 
-            error = "Invalid email or password"
-
-
+            error = "Invalid Email or Password."
 
     return render_template(
         "login.html",
@@ -48,9 +67,9 @@ def login():
     )
 
 
-# ==========================
+# ==========================================
 # IT Support
-# ==========================
+# ==========================================
 
 @app.route("/it-support")
 def it_support():
@@ -58,71 +77,125 @@ def it_support():
     return render_template("it_support.html")
 
 
-# ==========================
+# ==========================================
 # Employee Dashboard
-# ==========================
+# ==========================================
 
 @app.route("/employee-dashboard")
 def employee_dashboard():
 
-    return render_template("employee_dashboard.html")
+    employee_id = session.get("employee_id")
 
-# ==========================
+    if not employee_id:
+        return redirect(url_for("login"))
+
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT
+            e.Employee_Name,
+            e.Employee_ID,
+            d.Department_Name,
+            e.Email
+        FROM Employees e
+        JOIN Departments d
+            ON e.Department_ID = d.Department_ID
+        WHERE e.Employee_ID = :employee_id
+    """,
+    employee_id=employee_id)
+
+    employee = cursor.fetchone()
+
+    cursor.close()
+    connection.close()
+
+    return render_template(
+        "employee_dashboard.html",
+        employee=employee
+    )
+
+# ==========================================
 # Complaint Form
-# ==========================
+# ==========================================
 
 @app.route("/complaint-form", methods=["GET", "POST"])
 def complaint_form():
 
-    if request.method == "POST":
+    employee_id = session.get("employee_id")
 
-        # Later:
-        # Save complaint into Oracle Database
-
-        pass
+    if not employee_id:
+        return redirect(url_for("login"))
 
 
-    return render_template("complaint_form.html")
+    connection = get_connection()
+    cursor = connection.cursor()
 
-# ==========================
+
+    cursor.execute("""
+        SELECT
+            e.Employee_Name,
+            e.Employee_ID,
+            d.Department_Name,
+            e.Email
+        FROM Employees e
+        JOIN Departments d
+            ON e.Department_ID = d.Department_ID
+        WHERE e.Employee_ID = :employee_id
+    """,
+    employee_id=employee_id)
+
+
+    employee = cursor.fetchone()
+
+
+    cursor.close()
+    connection.close()
+
+
+    return render_template(
+        "complaint_form.html",
+        employee=employee
+    )
+
+# ==========================================
 # My Complaints
-# ==========================
+# ==========================================
 
 @app.route("/my-complaints")
 def my_complaints():
 
     return render_template("my_complaints.html")
 
-# ==========================
+
+# ==========================================
 # IT Dashboard
-# ==========================
+# ==========================================
 
 @app.route("/it-dashboard")
 def it_dashboard():
 
     return render_template("it_dashboard.html")
 
-# ==========================
+
+# ==========================================
 # Complaint Details
-# ==========================
+# ==========================================
 
 @app.route("/complaint-details", methods=["GET", "POST"])
 def complaint_details():
 
     if request.method == "POST":
 
-        # Later:
-        # Update complaint status
-        # Save remarks
-
+        # Update Complaint Later
         pass
-
 
     return render_template("complaint_details.html")
 
-# ==========================
+
+# ==========================================
 # 404 Error Page
-# ==========================
+# ==========================================
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -131,9 +204,29 @@ def page_not_found(error):
     <h1>404 - Page Not Found</h1>
     <a href="/">Return Home</a>
     """, 404
-# ==========================
+
+
+# ==========================================
+# Test Oracle Connection
+# ==========================================
+
+try:
+
+    connection = get_connection()
+
+    print("✅ Connected to Oracle Database Successfully!")
+
+    connection.close()
+
+except Exception as e:
+
+    print("❌ Connection Failed")
+    print(e)
+
+
+# ==========================================
 # Run Application
-# ==========================
+# ==========================================
 
 if __name__ == "__main__":
 
