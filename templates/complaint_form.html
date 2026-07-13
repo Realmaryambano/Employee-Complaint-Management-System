@@ -9,15 +9,12 @@
     <title>ECMS | Complaint Form</title>
 
 
-    <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
-
-    <!-- CSS -->
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
@@ -28,9 +25,6 @@
 
 
 <body>
-
-
-<!-- ================= HEADER ================= -->
 
 
 <header class="top-header">
@@ -58,8 +52,7 @@
 
 
 
-    <a href="{{ url_for('employee_dashboard') }}"
-       class="back-link">
+    <a href="{{ url_for('employee_dashboard') }}" class="back-link">
 
         ← Dashboard
 
@@ -72,251 +65,419 @@
 
 
 
-<!-- ================= MAIN ================= -->
-
-
 <main class="form-page">
 
 
-    <div class="page-heading">
+<div class="page-heading">
 
 
-        <h1>
-            Raise New Complaint
-        </h1>
+    <h1>
+        Raise New Complaint
+    </h1>
 
 
-        <p>
-            Submit your issue to the IT Department for resolution.
-        </p>
+    <p>
+        Submit your issue to the IT Department for resolution.
+    </p>
 
 
-    </div>
+</div>
 
-<form action="#" method="POST" enctype="multipart/form-data">
 
-    <!-- ==========================================
-                EMPLOYEE INFORMATION
-    =========================================== -->
 
-    <section class="form-section">
+<form action="{{ url_for('complaint_form') }}" 
+      method="POST" 
+      enctype="multipart/form-data">
 
-        <div class="section-title">
-            <h2>Employee Information</h2>
-        </div>
 
-        <div class="info-grid">
 
-            <div class="info-box">
-                <label>Employee Name</label>
-                <input type="text" value="Maryam Bano" readonly>
-            </div>
+<!-- ================= EMPLOYEE INFORMATION ================= -->
 
-            <div class="info-box">
-                <label>Employee ID</label>
-                <input type="text" value="EMP001" readonly>
-            </div>
 
-            <div class="info-box">
-                <label>Department</label>
-                <input type="text" value="Computer Science" readonly>
-            </div>
+<section class="form-section">
 
-            <div class="info-box">
-                <label>Email</label>
-                <input type="email" value="employee@company.com" readonly>
-            </div>
 
-            <div class="info-box">
-                <label>Date</label>
-                <input type="text" value="11 July 2026" readonly>
-            </div>
+<div class="section-title">
+    <h2>Employee Information</h2>
+</div>
 
-            <div class="info-box">
-                <label>Time</label>
-                <input type="text" value="09:45 AM" readonly>
-            </div>
 
-        </div>
 
-    </section>
+<div class="info-grid">
 
 
+<div class="info-box">
 
-    <!-- ==========================================
-                COMPLAINT INFORMATION
-    =========================================== -->
+<label>
+Employee Name
+</label>
 
-    <section class="form-section">
+<input type="text" value="{{ employee[0] }}" readonly>
 
-        <div class="section-title">
-            <h2>Complaint Information</h2>
-        </div>
+</div>
 
-        <div class="input-grid">
 
-            <div class="form-group">
-                <label>Issue Title</label>
 
-                <input
-                    type="text"
-                    placeholder="e.g. POS terminal not printing receipts"
-                    required>
-            </div>
 
-            <div class="form-group">
-                <label>Category</label>
+<div class="info-box">
 
-                <select required>
+<label>
+Employee ID
+</label>
 
-                    <option value="" disabled selected>
-                        Select Category
-                    </option>
+<input type="text" value="{{ employee[1] }}" readonly>
 
-                    <option>Hardware</option>
-                    <option>Software</option>
-                    <option>Printer / Scanner</option>
-                    <option>POS Machine</option>
-                    <option>ERP System</option>
-                    <option>Network / Internet</option>
-                    <option>Email</option>
-                    <option>Access Request</option>
-                    <option>Biometric Device</option>
-                    <option>CCTV</option>
-                    <option>Other</option>
+</div>
 
-                </select>
 
-            </div>
 
-        </div>
 
+<div class="info-box">
 
+<label>
+Department
+</label>
 
-        <div class="input-grid">
+<input type="text" value="{{ employee[2] }}" readonly>
 
-            <div class="form-group">
+</div>
 
-                <label>Priority</label>
 
-                <select required>
 
-                    <option value="" disabled selected>
-                        Select Priority
-                    </option>
 
-                    <option>Low</option>
-                    <option>Medium</option>
-                    <option>High</option>
-                    <option>Critical</option>
+<div class="info-box">
 
-                </select>
+<label>
+Email
+</label>
 
-            </div>
+<input type="email" value="{{ employee[3] }}" readonly>
 
+</div>
 
 
-            <div class="form-group">
 
-                <label>Store / Branch Location</label>
 
-                <input
-                    type="text"
-                    placeholder="e.g. Dolmen Mall Clifton"
-                    required>
+<div class="info-box">
 
-            </div>
+<label>
+Date
+</label>
 
-        </div>
+<input type="text" value="11 July 2026" readonly>
 
-    </section>
+</div>
 
 
 
-    <!-- ==========================================
-                ADDITIONAL DETAILS
-    =========================================== -->
 
-    <section class="form-section">
+<div class="info-box">
 
-        <div class="section-title">
-            <h2>Additional Details</h2>
-        </div>
+<label>
+Time
+</label>
 
-        <div class="input-grid">
+<input type="text" value="09:45 AM" readonly>
 
-            <div class="form-group">
+</div>
 
-                <label>Contact Number</label>
 
-                <input
-                    type="tel"
-                    placeholder="03XX-XXXXXXX"
-                    required>
 
-            </div>
+</div>
 
 
+</section>
 
-            <div class="form-group">
 
-                <label>Device / Asset Name</label>
 
-                <input
-                    type="text"
-                    placeholder="Optional">
 
-            </div>
 
-        </div>
+<!-- ================= COMPLAINT INFORMATION ================= -->
 
 
+<section class="form-section">
 
 
+<div class="section-title">
 
+<h2>
+Complaint Information
+</h2>
 
-        <div class="form-group">
+</div>
 
-            <label>Description</label>
 
-            <textarea
-                rows="7"
-                placeholder="Describe your issue in detail..."
-                required></textarea>
 
-        </div>
+<div class="input-grid">
 
 
 
-        <div class="form-group">
+<div class="form-group">
 
-            <label>Attachment (Optional)</label>
 
-            <input
-                type="file"
-                accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
+<label>
+Issue Title
+</label>
 
-        </div>
 
+<input 
+type="text"
+name="issue_title"
+placeholder="e.g. POS terminal not printing receipts"
+required>
 
 
-        <div class="form-actions">
+</div>
 
-            <button type="submit">
 
-                Submit Complaint
 
-            </button>
 
-        </div>
 
-    </section>
+<div class="form-group">
+
+
+<label>
+Category
+</label>
+
+
+<select name="category" required>
+
+
+<option value="" disabled selected>
+Select Category
+</option>
+
+
+<option>Hardware</option>
+
+<option>Software</option>
+
+<option>Printer / Scanner</option>
+
+<option>POS Machine</option>
+
+<option>ERP System</option>
+
+<option>Network / Internet</option>
+
+<option>Email</option>
+
+<option>Access Request</option>
+
+<option>Biometric Device</option>
+
+<option>CCTV</option>
+
+<option>Other</option>
+
+
+</select>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="input-grid">
+
+
+<div class="form-group">
+
+
+<label>
+Priority
+</label>
+
+
+<select name="priority" required>
+
+
+<option value="" disabled selected>
+Select Priority
+</option>
+
+
+<option>Low</option>
+
+<option>Medium</option>
+
+<option>High</option>
+
+<option>Critical</option>
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+Store / Branch Location
+</label>
+
+
+<input 
+type="text"
+name="store_location"
+placeholder="e.g. Dolmen Mall Clifton"
+required>
+
+
+</div>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<!-- ================= ADDITIONAL DETAILS ================= -->
+
+
+<section class="form-section">
+
+
+<div class="section-title">
+
+<h2>
+Additional Details
+</h2>
+
+</div>
+
+
+
+
+
+<div class="input-grid">
+
+
+<div class="form-group">
+
+
+<label>
+Contact Number
+</label>
+
+
+<input 
+type="tel"
+name="contact_number"
+placeholder="03XX-XXXXXXX"
+required>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+Device / Asset Name
+</label>
+
+
+<input 
+type="text"
+name="device_name"
+placeholder="Optional">
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+Description
+</label>
+
+
+<textarea 
+name="description"
+rows="7"
+placeholder="Describe your issue in detail..."
+required></textarea>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+Attachment (Optional)
+</label>
+
+
+<input 
+type="file"
+name="attachment"
+accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
+
+
+</div>
+
+
+
+
+
+<div class="form-actions">
+
+
+<button type="submit">
+
+Submit Complaint
+
+</button>
+
+
+</div>
+
+
+</section>
+
+
 
 </form>
 
 
 </main>
-
 
 
 
