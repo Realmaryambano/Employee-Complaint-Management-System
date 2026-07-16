@@ -76,12 +76,15 @@ Employee Complaint Management System/
 ## Screenshots
 No live demo is available yet.
 
-![- Login page:](static/images/screenshots/login-page.png)
----
-![Complaint form](static/images/screenshots/complaint-form.png)
----
+#### Login Page
+![- Login page:](static/images/screenshots/login.png)
+#### Employee Dashboard
 ![Employee dashboard](static/images/screenshots/employee-dashboard.png)
----
+#### Complaint Form
+![Complaint form](static/images/screenshots/complaint-form.png)
+#### Track Complaint
+![Track Complaint](static/images/screenshots/Track-Complaint.png)
+#### Complaint Details
 ![Complaint details page](static/images/screenshots/complaint-details.png)
 #### IT Dashboard
 ![IT dashboard](static/images/screenshots/it-dashboard.png)
