@@ -19,7 +19,37 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
 
+<style>
+    
 
+.logout-btn{
+
+    text-decoration:none;
+
+    color:white;
+
+    background:#2563EB;
+
+    padding:10px 20px;
+
+    border-radius:8px;
+
+    font-size:14px;
+
+    font-weight:500;
+
+    transition:.3s;
+
+}
+
+
+.logout-btn:hover{
+
+    background:#1D4ED8;
+
+}
+
+</style>
 </head>
 
 
@@ -50,9 +80,9 @@
 
 
 
-        <a href="{{ url_for('employee_dashboard') }}" class="back-link">
+        <a href="{{ url_for('employee_dashboard') }}" class="logout-btn">
 
-            ← Dashboard
+            ← Back to Dashboard
 
         </a>
 

@@ -29,19 +29,29 @@
 
             </div>
         </div>
-<a href="{{ url_for('reports') }}">
-    <button>📊 Reports & Analytics</button>
-</a>
-        <div class="admin-actions">
+        <div class="header-actions">
 
+            <a href="{{ url_for('reports') }}" class="report-btn">
 
-            <span>
-                Welcome, IT Admin
-            </span>
+                <span class="report-icon">📊</span>
 
-            <a href="{{ url_for('logout') }}" class="logout-btn">
-                Logout
+                Reports
+
             </a>
+
+
+            <div class="admin-actions">
+
+                <span>
+                    Welcome, IT Admin
+                </span>
+
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    Logout
+                </a>
+
+            </div>
+
         </div>
     </header>
 
@@ -83,9 +93,7 @@
 
         <!-- FILTER -->
 
-        <!-- FILTER -->
-
-        <form class="filter-box" method="GET" action="{{ url_for('it_dashboard') }}">
+<form class="filter-box" method="GET" action="{{ url_for('it_dashboard') }}">
 
     <input 
         type="text" 
@@ -94,35 +102,40 @@
         value="{{ search or '' }}"
     >
 
-    <select name="status">
 
-                <option value="">
-                    All Status
-                </option>
+    <select name="status" onchange="this.form.submit()">
 
-                <option value="Pending" {% if status_filter=="Pending" %}selected{% endif %}>
-                    Pending
-                </option>
+        <option value="">
+            All Status
+        </option>
 
-
-                <option value="In Progress" {% if status_filter=="In Progress" %}selected{% endif %}>
-                    In Progress
-                </option>
+        <option value="Pending" 
+        {% if status_filter=="Pending" %}selected{% endif %}>
+            Pending
+        </option>
 
 
-                <option value="Resolved" {% if status_filter=="Resolved" %}selected{% endif %}>
-                    Resolved
-                </option>
+        <option value="In Progress" 
+        {% if status_filter=="In Progress" %}selected{% endif %}>
+            In Progress
+        </option>
 
-            </select>
+
+        <option value="Resolved" 
+        {% if status_filter=="Resolved" %}selected{% endif %}>
+            Resolved
+        </option>
+
+    </select>
 
 
-            <button type="submit" class="view-btn">
-                Search
-            </button>
+    <button type="submit" class="view-btn">
+        Search
+    </button>
 
-        </form>
-        
+</form>
+
+
         <!-- TABLE -->
 
         <div class="table-container">

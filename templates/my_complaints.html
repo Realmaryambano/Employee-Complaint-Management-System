@@ -41,7 +41,7 @@
 
         <a href="{{ url_for('employee_dashboard') }}" class="logout-btn">
 
-            ← Dashboard
+          ← Back to Dashboard
 
         </a>
 
@@ -63,47 +63,38 @@
 
         </div>
 
+<form class="filter-box" method="GET" action="{{ url_for('my_complaints') }}">
+
+    <input type="text" 
+           name="search" 
+           placeholder="Search by Subject" 
+           value="{{ search or '' }}">
 
 
+    <select name="status" onchange="this.form.submit()">
+
+        <option value="">All Status</option>
+
+        <option value="Pending" {% if status_filter=="Pending" %}selected{% endif %}>
+            Pending
+        </option>
+
+        <option value="In Progress" {% if status_filter=="In Progress" %}selected{% endif %}>
+            In Progress
+        </option>
+
+        <option value="Resolved" {% if status_filter=="Resolved" %}selected{% endif %}>
+            Resolved
+        </option>
+
+    </select>
 
 
-        <form class="filter-box" method="GET" action="{{ url_for('my_complaints') }}">
+    <button type="submit" class="view-btn">
+        Search
+    </button>
 
-
-            <input type="text" name="search" placeholder="Search by Subject" value="{{ search or '' }}">
-
-
-            <select name="status">
-
-                <option value="">
-                    All Status
-                </option>
-
-
-                <option value="Pending" {% if status_filter=="Pending" %}selected{% endif %}>
-                    Pending
-                </option>
-
-
-                <option value="In Progress" {% if status_filter=="In Progress" %}selected{% endif %}>
-                    In Progress
-                </option>
-
-
-                <option value="Resolved" {% if status_filter=="Resolved" %}selected{% endif %}>
-                    Resolved
-                </option>
-
-
-            </select>
-
-
-            <button type="submit" class="view-btn">
-                Search
-            </button>
-
-
-        </form>
+</form>
         <!-- TABLE -->
 
         <div class="table-container">
