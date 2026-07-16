@@ -517,158 +517,367 @@ def reports():
     if session.get("role") != "Admin":
         return redirect(url_for("login"))
 
+
+    # ==============================
+    # Filters
+    # ==============================
+
     period = request.args.get("period", "all")
+
+    from_date = request.args.get("from_date")
+
+    to_date = request.args.get("to_date")
+
+    status = request.args.get("status", "All")
+
+
     print("Selected Period:", period)
+    print("From:", from_date)
+    print("To:", to_date)
+    print("Status:", status)
+
+
 
     connection = get_connection()
+
     cursor = connection.cursor()
 
-    # ----------------------------
-    # Date Filter
-    # ----------------------------
+
+
+    # ==============================
+    # Generate Filter Query
+    # ==============================
 
     filter_sql = ""
 
+    period_name = "All Time"
+
+
+
     if period == "today":
 
+        period_name = "Today"
+
         filter_sql = """
-        WHERE TRUNC(c.Date_Submitted) = TRUNC(SYSDATE)
+        WHERE TRUNC(c.Date_Submitted)=TRUNC(SYSDATE)
         """
+
+
 
     elif period == "yesterday":
 
+        period_name = "Yesterday"
+
         filter_sql = """
-        WHERE TRUNC(c.Date_Submitted) = TRUNC(SYSDATE)-1
+        WHERE TRUNC(c.Date_Submitted)=TRUNC(SYSDATE)-1
         """
 
+
+
     elif period == "week":
+
+        period_name = "Last 7 Days"
 
         filter_sql = """
         WHERE c.Date_Submitted >= SYSDATE-7
         """
 
+
+
     elif period == "month":
 
+        period_name = "This Month"
+
         filter_sql = """
-        WHERE EXTRACT(MONTH FROM c.Date_Submitted)=EXTRACT(MONTH FROM SYSDATE)
-        AND EXTRACT(YEAR FROM c.Date_Submitted)=EXTRACT(YEAR FROM SYSDATE)
+        WHERE EXTRACT(MONTH FROM c.Date_Submitted)
+        =
+        EXTRACT(MONTH FROM SYSDATE)
+
+        AND
+
+        EXTRACT(YEAR FROM c.Date_Submitted)
+        =
+        EXTRACT(YEAR FROM SYSDATE)
         """
+
+
 
     elif period == "lastmonth":
 
+        period_name = "Last Month"
+
         filter_sql = """
         WHERE c.Date_Submitted >= ADD_MONTHS(TRUNC(SYSDATE,'MM'),-1)
-        AND c.Date_Submitted < TRUNC(SYSDATE,'MM')
+
+        AND
+
+        c.Date_Submitted < TRUNC(SYSDATE,'MM')
         """
+
+
 
     elif period == "year":
 
+        period_name = "This Year"
+
         filter_sql = """
-        WHERE EXTRACT(YEAR FROM c.Date_Submitted)=EXTRACT(YEAR FROM SYSDATE)
+        WHERE EXTRACT(YEAR FROM c.Date_Submitted)
+        =
+        EXTRACT(YEAR FROM SYSDATE)
         """
+
+
 
     elif period == "lastyear":
 
+        period_name = "Last Year"
+
         filter_sql = """
-        WHERE EXTRACT(YEAR FROM c.Date_Submitted)=EXTRACT(YEAR FROM SYSDATE)-1
+        WHERE EXTRACT(YEAR FROM c.Date_Submitted)
+        =
+        EXTRACT(YEAR FROM SYSDATE)-1
         """
-    
+
+
+
+    # ==============================
+    # Custom Date Range
+    # ==============================
+
+
+    elif period == "custom":
+
+        period_name = "Custom Range"
+
+        conditions = []
+
+
+
+        if from_date:
+
+            conditions.append(
+                f"""
+                TRUNC(c.Date_Submitted) >=
+                TO_DATE('{from_date}','YYYY-MM-DD')
+                """
+            )
+
+
+
+        if to_date:
+
+            conditions.append(
+                f"""
+                TRUNC(c.Date_Submitted) <=
+                TO_DATE('{to_date}','YYYY-MM-DD')
+                """
+            )
+
+
+
+        if conditions:
+
+            filter_sql = "WHERE " + " AND ".join(conditions)
+
+
+
+    # ==============================
+    # Status Filter
+    # ==============================
+
+
+    if status != "All":
+
+
+        if filter_sql:
+
+            filter_sql += f"""
+            AND c.Status='{status}'
+            """
+
+        else:
+
+            filter_sql = f"""
+            WHERE c.Status='{status}'
+            """
+
+
+
+        period_name += f" - {status}"
+
+
+
     print(filter_sql)
 
 
-    # ----------------------------
+
+    # ==============================
     # Summary Cards
-    # ----------------------------
+    # ==============================
+
 
     summary_query = f"""
 
-        SELECT
+    SELECT
 
-            COUNT(*) AS TOTAL,
+        COUNT(*),
 
-            SUM(CASE
-                    WHEN Status='Resolved'
-                    THEN 1
-                    ELSE 0
-                END) AS RESOLVED,
 
-            SUM(CASE
-                    WHEN Status='Pending'
-                    THEN 1
-                    ELSE 0
-                END) AS PENDING,
+        SUM(
+            CASE 
+            WHEN Status='Resolved'
+            THEN 1
+            ELSE 0
+            END
+        ),
 
-            SUM(CASE
-                    WHEN Status='In Progress'
-                    THEN 1
-                    ELSE 0
-                END) AS PROGRESS
 
-        FROM Complaints c
+        SUM(
+            CASE 
+            WHEN Status='Pending'
+            THEN 1
+            ELSE 0
+            END
+        ),
 
-        {filter_sql}
+
+        SUM(
+            CASE 
+            WHEN Status='In Progress'
+            THEN 1
+            ELSE 0
+            END
+        )
+
+
+    FROM Complaints c
+
+
+    {filter_sql}
 
     """
+
+
 
     cursor.execute(summary_query)
 
+
+
     row = cursor.fetchone()
 
-    total = row[0] if row[0] else 0
-    resolved = row[1] if row[1] else 0
-    pending = row[2] if row[2] else 0
-    progress = row[3] if row[3] else 0
 
-    # ----------------------------
+
+    total = row[0] or 0
+
+    resolved = row[1] or 0
+
+    pending = row[2] or 0
+
+    progress = row[3] or 0
+
+
+
+
+    # ==============================
     # Complaint Details
-    # ----------------------------
+    # ==============================
+
 
     query = f"""
 
-        SELECT
 
-            c.Complaint_ID,
-            e.Employee_Name,
-            d.Department_Name,
-            c.Category,
-            c.Priority,
-            c.Issue_Title,
-            c.Status,
-            c.Date_Submitted
+    SELECT
 
-        FROM Complaints c
 
-        JOIN Employees e
-        ON c.Employee_ID = e.Employee_ID
+        c.Complaint_ID,
 
-        JOIN Departments d
-        ON e.Department_ID = d.Department_ID
+        e.Employee_Name,
 
-        {filter_sql}
+        d.Department_Name,
 
-        ORDER BY c.Date_Submitted DESC
+        c.Category,
+
+        c.Priority,
+
+        c.Issue_Title,
+
+        c.Status,
+
+        c.Date_Submitted
+
+
+
+    FROM Complaints c
+
+
+
+    JOIN Employees e
+
+    ON c.Employee_ID=e.Employee_ID
+
+
+
+    JOIN Departments d
+
+    ON e.Department_ID=d.Department_ID
+
+
+
+    {filter_sql}
+
+
+
+    ORDER BY c.Date_Submitted DESC
+
+
 
     """
 
+
+
     cursor.execute(query)
+
+
 
     complaints = cursor.fetchall()
 
+
+
     cursor.close()
+
     connection.close()
+
+
+
 
     return render_template(
 
         "reports.html",
 
+
         complaints=complaints,
 
+
         total=total,
+
         resolved=resolved,
+
         pending=pending,
+
         progress=progress,
 
-        period=period
+
+        period=period,
+
+
+        from_date=from_date,
+
+
+        to_date=to_date,
+
+
+        status=status
+
 
     )
 # ==========================================
@@ -678,657 +887,1755 @@ def reports():
 @app.route("/export-pdf")
 def export_pdf():
 
+
     if session.get("role") != "Admin":
         return redirect(url_for("login"))
 
+
+
+    # ==============================
+    # Filters
+    # ==============================
+
     period = request.args.get("period", "all")
 
+    from_date = request.args.get("from_date")
+
+    to_date = request.args.get("to_date")
+
+    status = request.args.get("status", "All")
+
+
+
     connection = get_connection()
+
     cursor = connection.cursor()
 
-    # ==========================================
-    # Report Period
-    # ==========================================
+
+
+    # ==============================
+    # Report Filter
+    # ==============================
+
 
     filter_sql = ""
+
     period_name = "All Time"
 
+
+
+
     if period == "today":
+
+
         period_name = "Today"
-        filter_sql = "WHERE TRUNC(c.Date_Submitted)=TRUNC(SYSDATE)"
+
+
+        filter_sql = """
+        WHERE TRUNC(c.Date_Submitted)=TRUNC(SYSDATE)
+        """
+
+
 
     elif period == "yesterday":
+
+
         period_name = "Yesterday"
-        filter_sql = "WHERE TRUNC(c.Date_Submitted)=TRUNC(SYSDATE)-1"
+
+
+        filter_sql = """
+        WHERE TRUNC(c.Date_Submitted)=TRUNC(SYSDATE)-1
+        """
+
+
 
     elif period == "week":
+
+
         period_name = "Last 7 Days"
-        filter_sql = "WHERE c.Date_Submitted>=SYSDATE-7"
+
+
+        filter_sql = """
+        WHERE c.Date_Submitted>=SYSDATE-7
+        """
+
+
 
     elif period == "month":
+
+
         period_name = "This Month"
+
+
         filter_sql = """
-        WHERE EXTRACT(MONTH FROM c.Date_Submitted)=EXTRACT(MONTH FROM SYSDATE)
-        AND EXTRACT(YEAR FROM c.Date_Submitted)=EXTRACT(YEAR FROM SYSDATE)
+
+        WHERE EXTRACT(MONTH FROM c.Date_Submitted)
+        =
+        EXTRACT(MONTH FROM SYSDATE)
+
+
+        AND
+
+
+        EXTRACT(YEAR FROM c.Date_Submitted)
+        =
+        EXTRACT(YEAR FROM SYSDATE)
+
         """
+
+
 
     elif period == "lastmonth":
+
+
         period_name = "Last Month"
+
+
         filter_sql = """
+
         WHERE c.Date_Submitted>=ADD_MONTHS(TRUNC(SYSDATE,'MM'),-1)
-        AND c.Date_Submitted<TRUNC(SYSDATE,'MM')
+
+
+        AND
+
+
+        c.Date_Submitted<TRUNC(SYSDATE,'MM')
+
         """
+
+
 
     elif period == "year":
+
+
         period_name = "This Year"
+
+
         filter_sql = """
-        WHERE EXTRACT(YEAR FROM c.Date_Submitted)=EXTRACT(YEAR FROM SYSDATE)
+
+        WHERE EXTRACT(YEAR FROM c.Date_Submitted)
+        =
+        EXTRACT(YEAR FROM SYSDATE)
+
         """
+
+
 
     elif period == "lastyear":
+
+
         period_name = "Last Year"
+
+
         filter_sql = """
-        WHERE EXTRACT(YEAR FROM c.Date_Submitted)=EXTRACT(YEAR FROM SYSDATE)-1
+
+        WHERE EXTRACT(YEAR FROM c.Date_Submitted)
+        =
+        EXTRACT(YEAR FROM SYSDATE)-1
+
         """
 
-    # ==========================================
-    # Summary
-    # ==========================================
+
+
+
+    # ==============================
+    # Custom Date Range
+    # ==============================
+
+
+    elif period == "custom":
+
+
+        period_name = "Custom Range"
+
+
+        conditions = []
+
+
+
+        if from_date:
+
+
+            conditions.append(
+
+                f"""
+
+                TRUNC(c.Date_Submitted)>=
+
+                TO_DATE('{from_date}','YYYY-MM-DD')
+
+                """
+
+            )
+
+
+
+        if to_date:
+
+
+            conditions.append(
+
+                f"""
+
+                TRUNC(c.Date_Submitted)<=
+
+                TO_DATE('{to_date}','YYYY-MM-DD')
+
+                """
+
+            )
+
+
+
+        if conditions:
+
+
+            filter_sql = "WHERE " + " AND ".join(conditions)
+
+
+
+
+
+
+    # ==============================
+    # Status Filter
+    # ==============================
+
+
+    if status != "All":
+
+
+        if filter_sql:
+
+
+            filter_sql += f"""
+
+            AND c.Status='{status}'
+
+            """
+
+
+        else:
+
+
+            filter_sql = f"""
+
+            WHERE c.Status='{status}'
+
+            """
+
+
+
+        period_name += f" - {status}"
+
+
+
+
+
+    # ==============================
+    # Summary Data
+    # ==============================
+
 
     summary_query = f"""
+
     SELECT
+
+
         COUNT(*),
-        SUM(CASE WHEN Status='Resolved' THEN 1 ELSE 0 END),
-        SUM(CASE WHEN Status='Pending' THEN 1 ELSE 0 END),
-        SUM(CASE WHEN Status='In Progress' THEN 1 ELSE 0 END)
+
+
+        SUM(
+            CASE 
+            WHEN Status='Resolved'
+            THEN 1
+            ELSE 0
+            END
+        ),
+
+
+        SUM(
+            CASE 
+            WHEN Status='Pending'
+            THEN 1
+            ELSE 0
+            END
+        ),
+
+
+        SUM(
+            CASE 
+            WHEN Status='In Progress'
+            THEN 1
+            ELSE 0
+            END
+        )
+
+
     FROM Complaints c
+
+
     {filter_sql}
+
+
     """
+
+
 
     cursor.execute(summary_query)
 
+
+
     summary = cursor.fetchone()
 
+
+
     total = summary[0] or 0
+
     resolved = summary[1] or 0
+
     pending = summary[2] or 0
+
     progress = summary[3] or 0
 
-    # ==========================================
+
+
+
+
+    # ==============================
     # Complaint Data
-    # ==========================================
+    # ==============================
+
 
     query = f"""
+
+
     SELECT
 
+
         c.Complaint_ID,
+
         e.Employee_Name,
+
         d.Department_Name,
+
         c.Category,
+
         c.Priority,
+
         c.Issue_Title,
+
         c.Status,
-        TO_CHAR(c.Date_Submitted,'DD-MON-YYYY')
+
+        TO_CHAR(
+            c.Date_Submitted,
+            'DD-MON-YYYY'
+        )
+
+
 
     FROM Complaints c
 
+
+
     JOIN Employees e
-        ON c.Employee_ID=e.Employee_ID
+
+    ON c.Employee_ID=e.Employee_ID
+
+
 
     JOIN Departments d
-        ON e.Department_ID=d.Department_ID
+
+    ON e.Department_ID=d.Department_ID
+
+
+
 
     {filter_sql}
 
+
+
+
     ORDER BY c.Date_Submitted DESC
+
+
+
     """
+
+
 
     cursor.execute(query)
 
+
+
     complaints = cursor.fetchall()
 
+
+
     cursor.close()
+
     connection.close()
 
+
     # ==========================================
-    # PDF
+    # Generate PDF
     # ==========================================
 
-    temp = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf")
+
+    temp = tempfile.NamedTemporaryFile(
+        delete=False,
+        suffix=".pdf"
+    )
+
 
     doc = SimpleDocTemplate(
+
         temp.name,
+
         pagesize=landscape(letter),
+
         rightMargin=25,
+
         leftMargin=25,
+
         topMargin=25,
-        bottomMargin=25
+
+        bottomMargin=25,
+
+        title="ECMS Complaint Report",
+
+        author="Bonanza Satrangi - Employee Complaint Management System"
+
     )
+
+
 
     styles = getSampleStyleSheet()
 
+
+
     title = ParagraphStyle(
+
         "Title",
+
         parent=styles["Heading1"],
-        alignment=1,
+
+        alignment=TA_CENTER,
+
         fontSize=22,
+
         textColor=colors.HexColor("#0D47A1"),
+
         spaceAfter=8
+
     )
 
+
+
     heading = ParagraphStyle(
+
         "Heading",
+
         parent=styles["Heading2"],
-        alignment=1,
+
+        alignment=TA_CENTER,
+
         textColor=colors.HexColor("#1565C0"),
+
         spaceAfter=15
+
     )
+
+
 
     normal = styles["Normal"]
 
+
+
     elements = []
+
+
 
     # ==========================================
     # Header
     # ==========================================
 
-    elements.append(Paragraph("<b>BONANZA SATRANGI</b>", title))
 
     elements.append(
+
         Paragraph(
+
+            "<b>BONANZA SATRANGI</b>",
+
+            title
+
+        )
+
+    )
+
+
+
+    elements.append(
+
+        Paragraph(
+
             "Employee Complaint Management System",
+
             heading
+
         )
+
     )
 
-    from datetime import datetime
+
 
     elements.append(
+
         Paragraph(
+
             f"<b>Report Period:</b> {period_name}",
+
             normal
+
         )
+
     )
+
+
 
     elements.append(
+
         Paragraph(
+
             f"<b>Generated On:</b> {datetime.now().strftime('%d %B %Y, %I:%M %p')}",
+
             normal
+
         )
+
     )
 
-    elements.append(Spacer(1, 15))
+
+
+    elements.append(
+
+        Spacer(1,15)
+
+    )
+
+
+
 
     # ==========================================
     # Summary Table
     # ==========================================
 
+
     summary_data = [
 
-        ["Total", "Resolved", "Pending", "In Progress"],
 
-        [str(total), str(resolved), str(pending), str(progress)]
+        [
+
+            "Total",
+
+            "Resolved",
+
+            "Pending",
+
+            "In Progress"
+
+        ],
+
+
+
+        [
+
+            str(total),
+
+            str(resolved),
+
+            str(pending),
+
+            str(progress)
+
+        ]
 
     ]
 
-    summary_table = Table(summary_data, colWidths=[120]*4)
 
-    summary_table.setStyle(TableStyle([
 
-        ('BACKGROUND',(0,0),(-1,0),colors.HexColor("#0D47A1")),
-        ('TEXTCOLOR',(0,0),(-1,0),colors.white),
-        ('FONTNAME',(0,0),(-1,0),"Helvetica-Bold"),
-        ('FONTSIZE',(0,0),(-1,0),11),
 
-        ('BACKGROUND',(0,1),(-1,1),colors.HexColor("#F4F7FB")),
+    summary_table = Table(
 
-        ('GRID',(0,0),(-1,-1),0.6,colors.grey),
+        summary_data,
 
-        ('ALIGN',(0,0),(-1,-1),"CENTER"),
+        colWidths=[120]*4
 
-        ('BOTTOMPADDING',(0,0),(-1,0),10),
+    )
 
-        ('TOPPADDING',(0,1),(-1,1),10)
 
-    ]))
+
+
+    summary_table.setStyle(
+
+        TableStyle([
+
+
+            (
+
+            'BACKGROUND',
+
+            (0,0),
+
+            (-1,0),
+
+            colors.HexColor("#0D47A1")
+
+            ),
+
+
+
+            (
+
+            'TEXTCOLOR',
+
+            (0,0),
+
+            (-1,0),
+
+            colors.white
+
+            ),
+
+
+
+            (
+
+            'FONTNAME',
+
+            (0,0),
+
+            (-1,0),
+
+            "Helvetica-Bold"
+
+            ),
+
+
+
+            (
+
+            'GRID',
+
+            (0,0),
+
+            (-1,-1),
+
+            0.6,
+
+            colors.grey
+
+            ),
+
+
+
+            (
+
+            'ALIGN',
+
+            (0,0),
+
+            (-1,-1),
+
+            "CENTER"
+
+            ),
+
+
+
+            (
+
+            'BACKGROUND',
+
+            (0,1),
+
+            (-1,1),
+
+            colors.HexColor("#F4F7FB")
+
+            )
+
+        ])
+
+    )
+
+
 
     elements.append(summary_table)
 
-    elements.append(Spacer(1,20))
+
+
+    elements.append(
+
+        Spacer(1,20)
+
+    )
+
+
+
+
 
     # ==========================================
     # Complaint Table
     # ==========================================
 
-    # Style for table text wrapping
+
     table_style = ParagraphStyle(
+
         "TableText",
+
         parent=styles["Normal"],
+
         fontSize=8,
+
         leading=10,
-        alignment=1
+
+        alignment=TA_CENTER
+
     )
 
+
+
     header_style = ParagraphStyle(
+
         "TableHeader",
+
         parent=styles["Normal"],
+
         fontSize=8,
+
         leading=10,
+
         textColor=colors.white,
-        alignment=1
+
+        alignment=TA_CENTER
+
     )
+
+
 
 
     data = [[
 
+
         Paragraph("<b>ID</b>", header_style),
+
         Paragraph("<b>Employee</b>", header_style),
+
         Paragraph("<b>Department</b>", header_style),
+
         Paragraph("<b>Category</b>", header_style),
+
         Paragraph("<b>Priority</b>", header_style),
+
         Paragraph("<b>Issue</b>", header_style),
+
         Paragraph("<b>Status</b>", header_style),
+
         Paragraph("<b>Date</b>", header_style)
+
 
     ]]
 
 
+
+
+
     for row in complaints:
+
 
         data.append([
 
-            Paragraph(f"ECMS-{row[0]}", table_style),
 
-            Paragraph(str(row[1]), table_style),
+            Paragraph(
+                f"ECMS-{row[0]}",
+                table_style
+            ),
 
-            Paragraph(str(row[2]), table_style),
 
-            Paragraph(str(row[3]), table_style),
+            Paragraph(
+                str(row[1]),
+                table_style
+            ),
 
-            Paragraph(str(row[4]), table_style),
 
-            Paragraph(str(row[5]), table_style),
+            Paragraph(
+                str(row[2]),
+                table_style
+            ),
 
-            Paragraph(str(row[6]), table_style),
 
-            Paragraph(str(row[7]), table_style)
+            Paragraph(
+                str(row[3]),
+                table_style
+            ),
+
+
+            Paragraph(
+                str(row[4]),
+                table_style
+            ),
+
+
+            Paragraph(
+                str(row[5]),
+                table_style
+            ),
+
+
+            Paragraph(
+                str(row[6]),
+                table_style
+            ),
+
+
+            Paragraph(
+                str(row[7]),
+                table_style
+            )
+
 
         ])
 
 
+
+
+
     table = Table(
+
         data,
+
         repeatRows=1,
+
         colWidths=[
-            55,   # ID
-            90,   # Employee
-            80,   # Department
-            75,   # Category
-            65,   # Priority
-            200,  # Issue
-            75,   # Status
-            75    # Date
+
+            55,
+
+            90,
+
+            80,
+
+            75,
+
+            65,
+
+            200,
+
+            75,
+
+            75
+
         ]
+
     )
 
 
-    table.setStyle(TableStyle([
 
 
-        ('BACKGROUND',(0,0),(-1,0),colors.HexColor("#0D47A1")),
 
-        ('TEXTCOLOR',(0,0),(-1,0),colors.white),
+    table.setStyle(
 
-        ('FONTNAME',(0,0),(-1,0),"Helvetica-Bold"),
+        TableStyle([
 
-        ('GRID',(0,0),(-1,-1),0.5,colors.grey),
 
-        ('VALIGN',(0,0),(-1,-1),"MIDDLE"),
+            (
 
-        ('ALIGN',(0,0),(-1,-1),"CENTER"),
+            'BACKGROUND',
 
-        ('ROWBACKGROUNDS',
-            (0,1),
+            (0,0),
+
+            (-1,0),
+
+            colors.HexColor("#0D47A1")
+
+            ),
+
+
+
+            (
+
+            'TEXTCOLOR',
+
+            (0,0),
+
+            (-1,0),
+
+            colors.white
+
+            ),
+
+
+
+            (
+
+            'GRID',
+
+            (0,0),
+
             (-1,-1),
-            [colors.white, colors.HexColor("#F4F7FB")]
-        ),
 
-        ('LEFTPADDING',(0,0),(-1,-1),5),
+            0.5,
 
-        ('RIGHTPADDING',(0,0),(-1,-1),5),
+            colors.grey
 
-        ('TOPPADDING',(0,0),(-1,-1),8),
+            ),
 
-        ('BOTTOMPADDING',(0,0),(-1,-1),8)
 
-    ]))
+
+            (
+
+            'ALIGN',
+
+            (0,0),
+
+            (-1,-1),
+
+            "CENTER"
+
+            ),
+
+
+
+            (
+
+            'VALIGN',
+
+            (0,0),
+
+            (-1,-1),
+
+            "MIDDLE"
+
+            ),
+
+
+
+            (
+
+            'ROWBACKGROUNDS',
+
+            (0,1),
+
+            (-1,-1),
+
+            [
+
+                colors.white,
+
+                colors.HexColor("#F4F7FB")
+
+            ]
+
+            )
+
+
+        ])
+
+    )
+
 
 
     elements.append(table)
+
+
 
     # ==========================================
     # Build PDF
     # ==========================================
 
+
     doc.build(elements)
+
+
 
     return send_file(
 
         temp.name,
 
+
         as_attachment=True,
 
+
         download_name="ECMS_Complaint_Report.pdf",
+
 
         mimetype="application/pdf"
 
     )
+
 # ==========================================
 # Export Excel Report
 # ==========================================
 
 
-@app.route("/export-excel/<period>")
-def export_excel(period):
+@app.route("/export-excel")
+def export_excel():
+
 
     if session.get("role") != "Admin":
         return redirect(url_for("login"))
 
+
+
+    period = request.args.get("period","all")
+
+    from_date = request.args.get("from_date")
+
+    to_date = request.args.get("to_date")
+
+    status = request.args.get("status","All")
+
+
+
     wb = Workbook()
+
     ws = wb.active
+
     ws.title = "Complaint Report"
 
-    # ==========================
+
+
+    # ==========================================
     # Styles
-    # ==========================
+    # ==========================================
 
-    blue = PatternFill("solid", fgColor="0D47A1")
-    light_blue = PatternFill("solid", fgColor="1976D2")
-    grey = PatternFill("solid", fgColor="F3F4F6")
-    green = PatternFill("solid", fgColor="4CAF50")
-    orange = PatternFill("solid", fgColor="FB8C00")
-    sky = PatternFill("solid", fgColor="2196F3")
 
-    white_font = Font(color="FFFFFF", bold=True)
-    bold = Font(bold=True)
-    title = Font(size=18, bold=True)
-    subtitle = Font(size=14, bold=True)
+    blue = PatternFill(
+        "solid",
+        fgColor="0D47A1"
+    )
 
-    center = Alignment(horizontal="center", vertical="center")
-    left = Alignment(horizontal="left", vertical="center")
+
+    light_blue = PatternFill(
+        "solid",
+        fgColor="1976D2"
+    )
+
+
+    grey = PatternFill(
+        "solid",
+        fgColor="F3F4F6"
+    )
+
+
+    green = PatternFill(
+        "solid",
+        fgColor="4CAF50"
+    )
+
+
+    orange = PatternFill(
+        "solid",
+        fgColor="FB8C00"
+    )
+
+
+    sky = PatternFill(
+        "solid",
+        fgColor="2196F3"
+    )
+
+
+
+    white_font = Font(
+        color="FFFFFF",
+        bold=True
+    )
+
+
+    bold = Font(
+        bold=True
+    )
+
+
+    center = Alignment(
+        horizontal="center",
+        vertical="center"
+    )
+
+
+    left = Alignment(
+        horizontal="left",
+        vertical="center"
+    )
+
 
     thin = Side(style="thin")
-    border = Border(left=thin, right=thin, top=thin, bottom=thin)
 
-    # ==========================
+
+    border = Border(
+        left=thin,
+        right=thin,
+        top=thin,
+        bottom=thin
+    )
+
+
+
+
+    # ==========================================
     # Header
-    # ==========================
+    # ==========================================
+
 
     ws.merge_cells("A1:H1")
-    ws["A1"] = "BONANZA SATRANGI"
-    ws["A1"].fill = blue
-    ws["A1"].font = Font(color="FFFFFF", bold=True, size=18)
-    ws["A1"].alignment = center
+
+    ws["A1"]="BONANZA SATRANGI"
+
+    ws["A1"].fill=blue
+
+    ws["A1"].font=Font(
+        color="FFFFFF",
+        bold=True,
+        size=18
+    )
+
+    ws["A1"].alignment=center
+
+
+
 
     ws.merge_cells("A2:H2")
-    ws["A2"] = "Employee Complaint Management System"
-    ws["A2"].fill = light_blue
-    ws["A2"].font = white_font
-    ws["A2"].alignment = center
+
+
+    ws["A2"]="Employee Complaint Management System"
+
+
+    ws["A2"].fill=light_blue
+
+    ws["A2"].font=white_font
+
+    ws["A2"].alignment=center
+
+
+
+
 
     ws.merge_cells("A4:H4")
-    ws["A4"] = "EMPLOYEE COMPLAINT ANALYTICS REPORT"
-    ws["A4"].font = title
-    ws["A4"].alignment = center
 
-    # ==========================
-    # Database Connection
-    # ==========================
 
-    connection = get_connection()
-    cursor = connection.cursor()
+    ws["A4"]="EMPLOYEE COMPLAINT ANALYTICS REPORT"
 
-    # ==========================
-    # Date Filter
-    # ==========================
 
-    filter_sql = ""
-    period_name = "All Time"
+    ws["A4"].font=Font(
+        bold=True,
+        size=16
+    )
 
-    if period == "today":
-        period_name = "Today"
-        filter_sql = """
+    ws["A4"].alignment=center
+
+
+
+
+
+    # ==========================================
+    # Database
+    # ==========================================
+
+
+    connection=get_connection()
+
+    cursor=connection.cursor()
+
+
+
+
+    # ==========================================
+    # Filters
+    # ==========================================
+
+
+    filter_sql=""
+
+    period_name="All Time"
+
+
+
+
+    if period=="today":
+
+        period_name="Today"
+
+        filter_sql="""
         WHERE TRUNC(c.Date_Submitted)=TRUNC(SYSDATE)
         """
 
-    elif period == "yesterday":
-        period_name = "Yesterday"
-        filter_sql = """
+
+
+    elif period=="yesterday":
+
+        period_name="Yesterday"
+
+        filter_sql="""
         WHERE TRUNC(c.Date_Submitted)=TRUNC(SYSDATE)-1
         """
 
-    elif period == "week":
-        period_name = "Last 7 Days"
-        filter_sql = """
+
+
+    elif period=="week":
+
+        period_name="Last 7 Days"
+
+        filter_sql="""
         WHERE c.Date_Submitted>=SYSDATE-7
         """
 
-    elif period == "month":
-        period_name = "This Month"
-        filter_sql = """
-        WHERE EXTRACT(MONTH FROM c.Date_Submitted)=EXTRACT(MONTH FROM SYSDATE)
-        AND EXTRACT(YEAR FROM c.Date_Submitted)=EXTRACT(YEAR FROM SYSDATE)
+
+
+    elif period=="month":
+
+        period_name="This Month"
+
+        filter_sql="""
+        WHERE EXTRACT(MONTH FROM c.Date_Submitted)
+        =
+        EXTRACT(MONTH FROM SYSDATE)
+
+        AND
+
+        EXTRACT(YEAR FROM c.Date_Submitted)
+        =
+        EXTRACT(YEAR FROM SYSDATE)
         """
 
-    elif period == "lastmonth":
-        period_name = "Last Month"
-        filter_sql = """
+
+
+    elif period=="lastmonth":
+
+        period_name="Last Month"
+
+        filter_sql="""
         WHERE c.Date_Submitted>=ADD_MONTHS(TRUNC(SYSDATE,'MM'),-1)
-        AND c.Date_Submitted<TRUNC(SYSDATE,'MM')
+
+        AND
+
+        c.Date_Submitted<TRUNC(SYSDATE,'MM')
         """
 
-    elif period == "year":
-        period_name = "This Year"
-        filter_sql = """
-        WHERE EXTRACT(YEAR FROM c.Date_Submitted)=EXTRACT(YEAR FROM SYSDATE)
+
+
+    elif period=="year":
+
+        period_name="This Year"
+
+        filter_sql="""
+        WHERE EXTRACT(YEAR FROM c.Date_Submitted)
+        =
+        EXTRACT(YEAR FROM SYSDATE)
         """
 
-    elif period == "lastyear":
-        period_name = "Last Year"
-        filter_sql = """
-        WHERE EXTRACT(YEAR FROM c.Date_Submitted)=EXTRACT(YEAR FROM SYSDATE)-1
+
+
+    elif period=="lastyear":
+
+        period_name="Last Year"
+
+        filter_sql="""
+        WHERE EXTRACT(YEAR FROM c.Date_Submitted)
+        =
+        EXTRACT(YEAR FROM SYSDATE)-1
         """
 
-    # ==========================
-    # Report Metadata (Fixed placement to prevent Crash)
-    # ==========================
 
 
-    ws["A6"] = "Generated On"
-    ws["A6"].font = bold
-    ws["B6"] = datetime.now().strftime("%d-%b-%Y %I:%M %p")
+    elif period=="custom":
 
-    ws["D6"] = "Report Period"
-    ws["D6"].font = bold
-    ws["E6"] = period_name
 
-    # ==========================
-    # Summary (Optimized with dynamic Period Filter)
-    # ==========================
+        period_name="Custom Range"
 
-    summary_query = f"""
-    SELECT 
-        COUNT(*) AS TOTAL,
-        SUM(CASE WHEN Status='Resolved' THEN 1 ELSE 0 END),
-        SUM(CASE WHEN Status='Pending' THEN 1 ELSE 0 END),
-        SUM(CASE WHEN Status='In Progress' THEN 1 ELSE 0 END)
+
+        conditions=[]
+
+
+        if from_date:
+
+            conditions.append(
+
+            f"""
+
+            TRUNC(c.Date_Submitted)>=
+
+            TO_DATE('{from_date}','YYYY-MM-DD')
+
+            """
+
+            )
+
+
+
+        if to_date:
+
+            conditions.append(
+
+            f"""
+
+            TRUNC(c.Date_Submitted)<=
+
+            TO_DATE('{to_date}','YYYY-MM-DD')
+
+            """
+
+            )
+
+
+
+        if conditions:
+
+            filter_sql="WHERE "+" AND ".join(conditions)
+
+
+
+
+
+    # Status Filter
+
+
+    if status!="All":
+
+
+        if filter_sql:
+
+            filter_sql += f"""
+            AND c.Status='{status}'
+            """
+
+        else:
+
+            filter_sql=f"""
+            WHERE c.Status='{status}'
+            """
+
+
+
+        period_name += f" - {status}"
+
+
+
+
+
+    # ==========================================
+    # Metadata
+    # ==========================================
+
+
+    ws["A6"]="Generated On"
+
+    ws["A6"].font=bold
+
+
+    ws["B6"]=datetime.now().strftime(
+        "%d-%b-%Y %I:%M %p"
+    )
+
+
+
+    ws["D6"]="Report Period"
+
+    ws["D6"].font=bold
+
+
+    ws["E6"]=period_name
+
+
+
+
+    # ==========================================
+    # Summary
+    # ==========================================
+
+
+    summary_query=f"""
+
+
+    SELECT
+
+
+    COUNT(*),
+
+
+    SUM(CASE WHEN Status='Resolved'
+    THEN 1 ELSE 0 END),
+
+
+    SUM(CASE WHEN Status='Pending'
+    THEN 1 ELSE 0 END),
+
+
+    SUM(CASE WHEN Status='In Progress'
+    THEN 1 ELSE 0 END)
+
+
+
     FROM Complaints c
+
+
+
     {filter_sql}
+
+
+
     """
+
+
 
     cursor.execute(summary_query)
-    row_data = cursor.fetchone()
 
-    total = row_data[0] or 0
-    resolved = row_data[1] or 0
-    pending = row_data[2] or 0
-    progress = row_data[3] or 0
+
+    result=cursor.fetchone()
+
+
+
+    total=result[0] or 0
+
+    resolved=result[1] or 0
+
+    pending=result[2] or 0
+
+    progress=result[3] or 0
+
+
+
+
 
     ws.merge_cells("A8:H8")
-    ws["A8"] = "SUMMARY"
-    ws["A8"].fill = blue
-    ws["A8"].font = white_font
-    ws["A8"].alignment = center
 
-    summary = [
-        ("Total Complaints", total),
-        ("Resolved", resolved),
-        ("Pending", pending),
-        ("In Progress", progress)
+    ws["A8"]="SUMMARY"
+
+    ws["A8"].fill=blue
+
+    ws["A8"].font=white_font
+
+    ws["A8"].alignment=center
+
+
+
+
+    summary=[
+
+        ("Total Complaints",total),
+
+        ("Resolved",resolved),
+
+        ("Pending",pending),
+
+        ("In Progress",progress)
+
     ]
 
-    row = 9
-    for item, value in summary:
-        ws[f"A{row}"] = item
-        ws[f"A{row}"].font = bold
-        ws[f"A{row}"].fill = grey
 
-        ws[f"B{row}"] = value
-        ws[f"B{row}"].alignment = center
 
-        ws[f"A{row}"].border = border
-        ws[f"B{row}"].border = border
-        row += 1
+    row=9
 
-    # ==========================
-    # Table Title
-    # ==========================
 
-    start = row + 2
-    ws.merge_cells(f"A{start}:H{start}")
-    ws[f"A{start}"] = "COMPLAINT DETAILS"
-    ws[f"A{start}"].fill = blue
-    ws[f"A{start}"].font = white_font
-    ws[f"A{start}"].alignment = center
 
-    start += 1
-    headers = [
+    for name,value in summary:
+
+
+        ws[f"A{row}"]=name
+
+        ws[f"A{row}"].font=bold
+
+        ws[f"A{row}"].fill=grey
+
+
+        ws[f"B{row}"]=value
+
+        ws[f"B{row}"].alignment=center
+
+
+        ws[f"A{row}"].border=border
+
+        ws[f"B{row}"].border=border
+
+
+        row+=1
+
+
+
+
+
+    # ==========================================
+    # Complaint Table
+    # ==========================================
+
+
+    start=row+2
+
+
+
+    ws.merge_cells(
+        f"A{start}:H{start}"
+    )
+
+
+    ws[f"A{start}"]="COMPLAINT DETAILS"
+
+
+    ws[f"A{start}"].fill=blue
+
+    ws[f"A{start}"].font=white_font
+
+    ws[f"A{start}"].alignment=center
+
+
+
+    start+=1
+
+
+
+    headers=[
+
         "Complaint ID",
+
         "Employee",
+
         "Department",
+
         "Category",
+
         "Priority",
+
         "Issue Title",
+
         "Status",
+
         "Date Submitted"
+
     ]
 
-    for col, head in enumerate(headers, 1):
-        cell = ws.cell(row=start, column=col)
-        cell.value = head
-        cell.fill = blue
-        cell.font = white_font
-        cell.alignment = center
-        cell.border = border
 
-    # ==========================
-    # Complaint Data Table
-    # ==========================
 
-    query = f"""
-    SELECT 
-        c.Complaint_ID,
-        e.Employee_Name,
-        d.Department_Name,
-        c.Category,
-        c.Priority,
-        c.Issue_Title,
-        c.Status,
-        c.Date_Submitted
+    for col,head in enumerate(headers,1):
+
+        cell=ws.cell(
+            row=start,
+            column=col
+        )
+
+        cell.value=head
+
+        cell.fill=blue
+
+        cell.font=white_font
+
+        cell.alignment=center
+
+        cell.border=border
+
+
+
+
+
+    query=f"""
+
+
+    SELECT
+
+
+    c.Complaint_ID,
+
+    e.Employee_Name,
+
+    d.Department_Name,
+
+    c.Category,
+
+    c.Priority,
+
+    c.Issue_Title,
+
+    c.Status,
+
+    c.Date_Submitted
+
+
+
     FROM Complaints c
-    JOIN Employees e ON c.Employee_ID=e.Employee_ID
-    JOIN Departments d ON e.Department_ID=d.Department_ID
+
+
+
+    JOIN Employees e
+
+    ON c.Employee_ID=e.Employee_ID
+
+
+
+    JOIN Departments d
+
+    ON e.Department_ID=d.Department_ID
+
+
+
     {filter_sql}
+
+
+
     ORDER BY c.Date_Submitted DESC
+
+
+
     """
 
-    cursor.execute(query)
-    r = start + 1
 
-    for complaint in cursor.fetchall():
-        values = [
-            f"ECMS-{complaint[0]}",
-            complaint[1],
-            complaint[2],
-            complaint[3],
-            complaint[4],
-            complaint[5],
-            complaint[6],
-            str(complaint[7])
+
+    cursor.execute(query)
+
+
+
+    r=start+1
+
+
+
+    for item in cursor.fetchall():
+
+
+        values=[
+
+            f"ECMS-{item[0]}",
+
+            item[1],
+
+            item[2],
+
+            item[3],
+
+            item[4],
+
+            item[5],
+
+            item[6],
+
+            str(item[7])
+
         ]
 
-        for c, value in enumerate(values, 1):
-            cell = ws.cell(row=r, column=c)
-            cell.value = value
-            cell.border = border
 
-            if c == 7:
-                cell.alignment = center
-                if value == "Resolved":
-                    cell.fill = green
-                elif value == "Pending":
-                    cell.fill = orange
-                elif value == "In Progress":
-                    cell.fill = sky
-            elif c in [1, 4, 7, 8]:
-                cell.alignment = center
+
+        for col,value in enumerate(values,1):
+
+
+            cell=ws.cell(
+                row=r,
+                column=col
+            )
+
+
+            cell.value=value
+
+            cell.border=border
+
+
+
+            if col==7:
+
+
+                cell.alignment=center
+
+
+                if value=="Resolved":
+
+                    cell.fill=green
+
+
+                elif value=="Pending":
+
+                    cell.fill=orange
+
+
+                elif value=="In Progress":
+
+                    cell.fill=sky
+
+
             else:
-                cell.alignment = left
-        r += 1
+
+                cell.alignment=left
+
+
+
+        r+=1
+
+
+
+
 
     cursor.close()
+
     connection.close()
 
-    # ==========================
-    # Footer
-    # ==========================
 
-    r += 2
-    ws.merge_cells(f"A{r}:H{r}")
-    ws[f"A{r}"] = "Generated by Employee Complaint Management System (ECMS)"
-    ws[f"A{r}"].font = Font(italic=True)
 
-    # ==========================
-    # Widths
-    # ==========================
 
-    widths = {
-        "A": 15,
-        "B": 25,
-        "C": 20,
-        "D": 20,
-        "E": 15,
-        "F": 35,
-        "G": 18,
-        "H": 24
+    # ==========================================
+    # Column Width
+    # ==========================================
+
+
+    widths={
+
+        "A":15,
+
+        "B":25,
+
+        "C":20,
+
+        "D":18,
+
+        "E":15,
+
+        "F":35,
+
+        "G":18,
+
+        "H":22
+
     }
 
-    for col, width in widths.items():
-        ws.column_dimensions[col].width = width
 
-    # ==========================
-    # Download File Generation
-    # ==========================
 
-    output = io.BytesIO()
+    for col,width in widths.items():
+
+        ws.column_dimensions[col].width=width
+
+
+
+
+
+    # ==========================================
+    # Download
+    # ==========================================
+
+
+    output=io.BytesIO()
+
+
     wb.save(output)
+
+
     output.seek(0)
 
+
+
     return send_file(
+
         output,
+
         download_name="ECMS_Complaint_Report.xlsx",
+
         as_attachment=True,
+
         mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+
     )
 # ==========================================
 # Complaint Details
