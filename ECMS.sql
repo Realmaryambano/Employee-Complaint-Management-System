@@ -88,5 +88,123 @@ COMMIT;
 SELECT * FROM Departments;
 SELECT * FROM EMPLOYEES;
 SELECT * FROM Complaints;
+SELECT Complaint_ID
+FROM Complaints
+ORDER BY Complaint_ID;
+
+DELETE FROM Complaints;
+COMMIT;
 
 DESC Employees;
+DESC Complaints;
+
+INSERT INTO Employees
+(
+    Employee_ID,
+    Employee_Name,
+    Email,
+    Password,
+    Department_ID,
+    Role
+)
+VALUES
+(
+    'EMP002',
+    'Ahmed Khan',
+    'ahmed@bonanza.com',
+    '12345',
+    4,
+    'Employee'
+);
+
+
+INSERT INTO Employees
+(
+    Employee_ID,
+    Employee_Name,
+    Email,
+    Password,
+    Department_ID,
+    Role
+)
+VALUES
+(
+    'EMP003',
+    'Sara Ali',
+    'sara@bonanza.com',
+    '12345',
+    2,
+    'Employee'
+);
+
+
+INSERT INTO Employees
+(
+    Employee_ID,
+    Employee_Name,
+    Email,
+    Password,
+    Department_ID,
+    Role
+)
+VALUES
+(
+    'EMP004',
+    'Hassan Raza',
+    'hassan@bonanza.com',
+    '12345',
+    5,
+    'Employee'
+);
+
+
+
+INSERT INTO Employees
+(
+    Employee_ID,
+    Employee_Name,
+    Email,
+    Password,
+    Department_ID,
+    Role
+)
+VALUES
+(
+    'EMP005',
+    'Ayesha Noor',
+    'ayesha@bonanza.com',
+    '12345',
+    3,
+    'Employee'
+);
+
+
+COMMIT;
+
+select * from employees;
+
+
+
+INSERT INTO Employees
+(
+    Employee_ID,
+    Employee_Name,
+    Email,
+    Password,
+    Department_ID,
+    Role
+)
+VALUES
+(
+    'EMP006',
+    'Abdul Raza',
+    'abdul@bonanza.com',
+    '12345',
+    1,
+    'Employee'
+);
+COMMIT;
+select 
+DESC COMPLAINTS
+
+SELECT * from complaints;
