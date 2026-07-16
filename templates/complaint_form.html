@@ -12,8 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -27,144 +26,141 @@
 <body>
 
 
-<header class="top-header">
+    <header class="top-header">
 
 
-    <div class="brand">
+        <div class="brand">
 
-        <img src="{{ url_for('static', filename='images/company_logo.png') }}"
-             alt="Company Logo">
+            <img src="{{ url_for('static', filename='images/company_logo.png') }}" alt="Company Logo">
 
 
-        <div>
+            <div>
 
-            <h2>
-                Employee Complaint Management System
-            </h2>
+                <h2>
+                    Employee Complaint Management System
+                </h2>
 
-            <p>
-                Complaint Form
-            </p>
+                <p>
+                    Complaint Form
+                </p>
+
+            </div>
 
         </div>
 
-    </div>
 
 
+        <a href="{{ url_for('employee_dashboard') }}" class="back-link">
 
-    <a href="{{ url_for('employee_dashboard') }}" class="back-link">
+            ← Dashboard
 
-        ← Dashboard
-
-    </a>
+        </a>
 
 
-</header>
+    </header>
 
 
 
 
 
-<main class="form-page">
+    <main class="form-page">
 
 
-<div class="page-heading">
+        <div class="page-heading">
 
 
-    <h1>
-        Raise New Complaint
-    </h1>
+            <h1>
+                Raise New Complaint
+            </h1>
 
 
-    <p>
-        Submit your issue to the IT Department for resolution.
-    </p>
+            <p>
+                Submit your issue to the IT Department for resolution.
+            </p>
 
 
-</div>
-
-
-
-<form action="{{ url_for('complaint_form') }}" 
-      method="POST" 
-      enctype="multipart/form-data">
+        </div>
 
 
 
-<!-- ================= EMPLOYEE INFORMATION ================= -->
-
-
-<section class="form-section">
-
-
-<div class="section-title">
-    <h2>Employee Information</h2>
-</div>
+        <form action="{{ url_for('complaint_form') }}" method="POST" enctype="multipart/form-data">
 
 
 
-<div class="info-grid">
+            <!-- ================= EMPLOYEE INFORMATION ================= -->
 
 
-<div class="info-box">
+            <section class="form-section">
 
-<label>
-Employee Name
-</label>
 
-<input type="text" value="{{ employee[0] }}" readonly>
-
-</div>
+                <div class="section-title">
+                    <h2>Employee Information</h2>
+                </div>
 
 
 
+                <div class="info-grid">
 
-<div class="info-box">
 
-<label>
-Employee ID
-</label>
+                    <div class="info-box">
 
-<input type="text" value="{{ employee[1] }}" readonly>
+                        <label>
+                            Employee Name
+                        </label>
 
-</div>
+                        <input type="text" value="{{ employee[0] }}" readonly>
+
+                    </div>
 
 
 
 
-<div class="info-box">
+                    <div class="info-box">
 
-<label>
-Department
-</label>
+                        <label>
+                            Employee ID
+                        </label>
 
-<input type="text" value="{{ employee[2] }}" readonly>
+                        <input type="text" value="{{ employee[1] }}" readonly>
 
-</div>
-
-
+                    </div>
 
 
-<div class="info-box">
 
-<label>
-Email
-</label>
 
-<input type="email" value="{{ employee[3] }}" readonly>
+                    <div class="info-box">
 
-</div>
+                        <label>
+                            Department
+                        </label>
+
+                        <input type="text" value="{{ employee[2] }}" readonly>
+
+                    </div>
+
+
+
+
+                    <div class="info-box">
+
+                        <label>
+                            Email
+                        </label>
+
+                        <input type="email" value="{{ employee[3] }}" readonly>
+
+                    </div>
 
 
 
 
 <div class="info-box">
 
-<label>
-Date
-</label>
+    <label>
+        Date
+    </label>
 
-<input type="text" value="11 July 2026" readonly>
+    <input type="text" value="{{ employee[4] }}" readonly>
 
 </div>
 
@@ -173,321 +169,301 @@ Date
 
 <div class="info-box">
 
-<label>
-Time
-</label>
+    <label>
+        Time
+    </label>
 
-<input type="text" value="09:45 AM" readonly>
-
-</div>
-
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-<!-- ================= COMPLAINT INFORMATION ================= -->
-
-
-<section class="form-section">
-
-
-<div class="section-title">
-
-<h2>
-Complaint Information
-</h2>
+    <input type="text" value="{{ employee[5] }}" readonly>
 
 </div>
 
 
 
-<div class="input-grid">
+                </div>
 
 
+            </section>
 
-<div class="form-group">
 
 
-<label>
-Issue Title
-</label>
 
 
-<input 
-type="text"
-name="issue_title"
-placeholder="e.g. POS terminal not printing receipts"
-required>
+            <!-- ================= COMPLAINT INFORMATION ================= -->
 
 
-</div>
+            <section class="form-section">
 
 
+                <div class="section-title">
 
+                    <h2>
+                        Complaint Information
+                    </h2>
 
+                </div>
 
-<div class="form-group">
 
 
-<label>
-Category
-</label>
+                <div class="input-grid">
 
 
-<select name="category" required>
 
+                    <div class="form-group">
 
-<option value="" disabled selected>
-Select Category
-</option>
 
+                        <label>
+                            Issue Title
+                        </label>
 
-<option>Hardware</option>
 
-<option>Software</option>
+                        <input type="text" name="issue_title" placeholder="e.g. POS terminal not printing receipts"
+                            required>
 
-<option>Printer / Scanner</option>
 
-<option>POS Machine</option>
+                    </div>
 
-<option>ERP System</option>
 
-<option>Network / Internet</option>
 
-<option>Email</option>
 
-<option>Access Request</option>
 
-<option>Biometric Device</option>
+                    <div class="form-group">
 
-<option>CCTV</option>
 
-<option>Other</option>
+                        <label>
+                            Category
+                        </label>
 
 
-</select>
+                        <select name="category" required>
 
 
-</div>
+                            <option value="" disabled selected>
+                                Select Category
+                            </option>
 
 
-</div>
+                            <option>Hardware</option>
 
+                            <option>Software</option>
 
+                            <option>Printer / Scanner</option>
 
+                            <option>POS Machine</option>
 
+                            <option>ERP System</option>
 
-<div class="input-grid">
+                            <option>Network / Internet</option>
 
+                            <option>Email</option>
 
-<div class="form-group">
+                            <option>Access Request</option>
 
+                            <option>Biometric Device</option>
 
-<label>
-Priority
-</label>
+                            <option>CCTV</option>
 
+                            <option>Other</option>
 
-<select name="priority" required>
 
+                        </select>
 
-<option value="" disabled selected>
-Select Priority
-</option>
 
+                    </div>
 
-<option>Low</option>
 
-<option>Medium</option>
+                </div>
 
-<option>High</option>
 
-<option>Critical</option>
 
 
-</select>
 
+                <div class="input-grid">
 
-</div>
 
+                    <div class="form-group">
 
 
+                        <label>
+                            Priority
+                        </label>
 
 
-<div class="form-group">
+                        <select name="priority" required>
 
 
-<label>
-Store / Branch Location
-</label>
+                            <option value="" disabled selected>
+                                Select Priority
+                            </option>
 
 
-<input 
-type="text"
-name="store_location"
-placeholder="e.g. Dolmen Mall Clifton"
-required>
+                            <option>Low</option>
 
+                            <option>Medium</option>
 
-</div>
+                            <option>High</option>
 
+                            <option>Critical</option>
 
 
-</div>
+                        </select>
 
 
-</section>
+                    </div>
 
 
 
 
 
-<!-- ================= ADDITIONAL DETAILS ================= -->
+                    <div class="form-group">
 
 
-<section class="form-section">
+                        <label>
+                            Store / Branch Location
+                        </label>
 
 
-<div class="section-title">
+                        <input type="text" name="store_location" placeholder="e.g. Dolmen Mall Clifton" required>
 
-<h2>
-Additional Details
-</h2>
 
-</div>
+                    </div>
 
 
 
+                </div>
 
 
-<div class="input-grid">
+            </section>
 
 
-<div class="form-group">
 
 
-<label>
-Contact Number
-</label>
 
+            <!-- ================= ADDITIONAL DETAILS ================= -->
 
-<input 
-type="tel"
-name="contact_number"
-placeholder="03XX-XXXXXXX"
-required>
 
+            <section class="form-section">
 
-</div>
 
+                <div class="section-title">
 
+                    <h2>
+                        Additional Details
+                    </h2>
 
+                </div>
 
 
-<div class="form-group">
 
 
-<label>
-Device / Asset Name
-</label>
 
+                <div class="input-grid">
 
-<input 
-type="text"
-name="device_name"
-placeholder="Optional">
 
+                    <div class="form-group">
 
-</div>
 
+                        <label>
+                            Contact Number
+                        </label>
 
 
-</div>
+                        <input type="tel" name="contact_number" placeholder="03XX-XXXXXXX" required>
 
 
+                    </div>
 
 
 
 
-<div class="form-group">
 
+                    <div class="form-group">
 
-<label>
-Description
-</label>
 
+                        <label>
+                            Device / Asset Name
+                        </label>
 
-<textarea 
-name="description"
-rows="7"
-placeholder="Describe your issue in detail..."
-required></textarea>
 
+                        <input type="text" name="device_name" placeholder="Optional">
 
-</div>
 
+                    </div>
 
 
 
+                </div>
 
-<div class="form-group">
 
 
-<label>
-Attachment (Optional)
-</label>
 
 
-<input 
-type="file"
-name="attachment"
-accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
 
+                <div class="form-group">
 
-</div>
 
+                    <label>
+                        Description
+                    </label>
 
 
+                    <textarea name="description" rows="7" placeholder="Describe your issue in detail..."
+                        required></textarea>
 
 
-<div class="form-actions">
+                </div>
 
 
-<button type="submit">
 
-Submit Complaint
 
-</button>
 
+                <div class="form-group">
 
-</div>
 
+                    <label>
+                        Attachment (Optional)
+                    </label>
 
-</section>
 
+                    <input type="file" name="attachment" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
 
 
-</form>
+                </div>
 
 
-</main>
 
 
 
+                <div class="form-actions">
 
 
-<footer>
+                    <button type="submit">
 
-© 2026 Bonanza Satrangi | Employee Complaint Management System
+                        Submit Complaint
 
-</footer>
+                    </button>
+
+
+                </div>
+
+
+            </section>
+
+
+
+        </form>
+
+
+    </main>
+
+
+
+
+
+    <footer>
+
+        © 2026 Bonanza Satrangi | Employee Complaint Management System
+
+    </footer>
 
 
 

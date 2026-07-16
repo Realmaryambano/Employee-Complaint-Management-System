@@ -14,7 +14,7 @@
 </head>
 
 <body>
-   <!-- HEADER -->
+    <!-- HEADER -->
     <header class="top-header">
         <div class="brand">
             <img src="{{ url_for('static', filename='images/company_logo.png') }}">
@@ -29,7 +29,9 @@
 
             </div>
         </div>
-
+<a href="{{ url_for('reports') }}">
+    <button>📊 Reports & Analytics</button>
+</a>
         <div class="admin-actions">
 
 
@@ -37,10 +39,8 @@
                 Welcome, IT Admin
             </span>
 
-            <a href="{{ url_for('login') }}" class="logout-btn">
-
+            <a href="{{ url_for('logout') }}" class="logout-btn">
                 Logout
-
             </a>
         </div>
     </header>
@@ -57,51 +57,72 @@
             </p>
         </div>
 
+        <div class="dashboard-cards">
+
+            <div class="dashboard-card">
+                <h2>{{ total }}</h2>
+                <p>Total Complaints</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h2>{{ pending }}</h2>
+                <p>Pending</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h2>{{ progress }}</h2>
+                <p>In Progress</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h2>{{ resolved }}</h2>
+                <p>Resolved</p>
+            </div>
+
+        </div>
+
         <!-- FILTER -->
 
-        <div class="filter-box">
-            <input type="text" placeholder="Search by Ticket ID or Subject">
-            <select>
-                <option>
-                    All Categories
-                </option>
-                <option>
-                    Hardware
-                </option>
-                <option>
-                    Software
-                </option>
+        <!-- FILTER -->
 
-                <option>
-                    Network
-                </option>
+        <form class="filter-box" method="GET" action="{{ url_for('it_dashboard') }}">
 
-                <option>
-                    Access
-                </option>
+    <input 
+        type="text" 
+        name="search" 
+        placeholder="Search by Ticket ID or Subject"
+        value="{{ search or '' }}"
+    >
 
+    <select name="status">
 
-            </select>
-            <select>
-
-                <option>
+                <option value="">
                     All Status
                 </option>
-                <option>
+
+                <option value="Pending" {% if status_filter=="Pending" %}selected{% endif %}>
                     Pending
                 </option>
 
 
-                <option>
+                <option value="In Progress" {% if status_filter=="In Progress" %}selected{% endif %}>
                     In Progress
                 </option>
-                <option>
+
+
+                <option value="Resolved" {% if status_filter=="Resolved" %}selected{% endif %}>
                     Resolved
                 </option>
 
-
             </select>
-        </div>
+
+
+            <button type="submit" class="view-btn">
+                Search
+            </button>
+
+        </form>
+        
         <!-- TABLE -->
 
         <div class="table-container">
@@ -153,142 +174,82 @@
                 </thead>
                 <tbody>
 
+                    {% if complaints %}
+
+                    {% for complaint in complaints %}
 
                     <tr>
 
-
                         <td>
-                            ECMS-1001
+                            ECMS-{{ complaint[0] }}
                         </td>
 
-
                         <td>
-                            Ahmed Khan
+                            {{ complaint[1] }}
                         </td>
 
-
                         <td>
-                            Hardware
+                            {{ complaint[2] }}
                         </td>
 
-
                         <td>
-                            Laptop not starting
+                            {{ complaint[3] }}
                         </td>
 
-
                         <td>
-                            High
+                            {{ complaint[4] }}
                         </td>
 
-
                         <td>
+
+                            {% if complaint[5] == "Pending" %}
 
                             <span class="status pending">
                                 Pending
                             </span>
 
-                        </td>
-
-
-                        <td>
-
-                            <a href="{{ url_for('complaint_details') }}" class="view-btn">
-
-                                View
-
-                            </a>
-
-                        </td>
-
-
-                    </tr>
-
-                    <tr>
-
-
-                        <td>
-                            ECMS-1002
-                        </td>
-
-
-                        <td>
-                            Sara Ali
-                        </td>
-
-
-                        <td>
-                            Network
-                        </td>
-
-
-                        <td>
-                            Internet issue
-                        </td>
-
-
-                        <td>
-                            Medium
-                        </td>
-
-
-                        <td>
+                            {% elif complaint[5] == "In Progress" %}
 
                             <span class="status progress">
                                 In Progress
                             </span>
 
-                        </td>
-
-
-                        <td>
-
-                            <a href="{{ url_for('complaint_details') }}" class="view-btn">
-
-                                View
-
-                            </a>
-
-                        </td>
-
-
-                    </tr>
-                    <tr>
-
-
-                        <td>
-                            ECMS-1003
-                        </td>
-
-
-                        <td>
-                            Bilal Ahmed
-                        </td>
-                        <td>
-                            Software
-                        </td>
-                        <td>
-                            ERP login problem
-                        </td>
-                        <td>
-                            Critical
-                        </td>
-                        <td>
+                            {% else %}
 
                             <span class="status resolved">
                                 Resolved
                             </span>
 
-                        </td>
+                            {% endif %}
 
+                        </td>
 
                         <td>
 
-                            <a href="{{ url_for('complaint_details') }}" class="view-btn">
+                            <a href="{{ url_for('complaint_details', complaint_id=complaint[0]) }}" class="view-btn">
                                 View
                             </a>
+
                         </td>
+
                     </tr>
+
+                    {% endfor %}
+
+                    {% else %}
+
+                    <tr>
+
+                        <td colspan="7" style="text-align:center;padding:30px;">
+
+                            No complaints found.
+
+                        </td>
+
+                    </tr>
+
+                    {% endif %}
+
                 </tbody>
             </table>
         </div>

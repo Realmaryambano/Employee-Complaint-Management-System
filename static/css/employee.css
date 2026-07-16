@@ -223,7 +223,11 @@ footer{
         flex-direction:column;
 
     }
+    .employee-stats{
 
+        grid-template-columns:1fr;
+
+    }
 }
 
 /* ==========================
@@ -250,3 +254,66 @@ footer{
 
 }
 
+/* ==========================
+   EMPLOYEE STATISTICS CARDS
+========================== */
+
+.employee-stats{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:15px;
+
+    margin-bottom:40px;
+
+}
+
+
+.employee-stat-card{
+
+    background:white;
+
+    border:1px solid #C5D8F7;
+
+    border-radius:12px;
+
+    padding:20px;
+
+    text-align:center;
+
+    box-shadow:0 8px 20px rgba(37,99,235,.08);
+
+    transition:.3s;
+
+}
+
+
+.employee-stat-card:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:0 15px 30px rgba(37,99,235,.15);
+
+}
+
+
+.employee-stat-card h2{
+
+    color:#2563EB;
+
+    font-size:30px;
+
+    margin-bottom:8px;
+
+}
+
+
+.employee-stat-card p{
+
+    color:#64748B;
+
+    font-size:14px;
+
+}

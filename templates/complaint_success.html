@@ -3,40 +3,262 @@
 
 <head>
 
-<title>ECMS | Complaint Submitted</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>ECMS | Complaint Submitted</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+        }
+
+
+        body {
+
+            margin: 0;
+            min-height: 100vh;
+
+            background: #f5f7fb;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+
+
+        .success-card {
+
+            background: white;
+
+            width: 450px;
+
+            padding: 45px 40px;
+
+            border-radius: 12px;
+
+            text-align: center;
+
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+
+            border-top: 5px solid #2563eb;
+
+        }
+
+
+
+        .success-icon {
+
+            width: 70px;
+            height: 70px;
+
+            background: #e8f5e9;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            margin: 0 auto 25px;
+
+            font-size: 35px;
+
+        }
+
+
+
+        h1 {
+
+            color: #1f2937;
+
+            font-size: 26px;
+
+            margin-bottom: 12px;
+
+        }
+
+
+
+        .message {
+
+            color: #6b7280;
+
+            font-size: 15px;
+
+            margin-bottom: 25px;
+
+        }
+
+
+
+        .ticket-box {
+
+            background: #f8fafc;
+
+            border: 1px solid #e5e7eb;
+
+            padding: 18px;
+
+            border-radius: 8px;
+
+            margin-bottom: 30px;
+
+        }
+
+
+
+        .ticket-label {
+
+            font-size: 13px;
+
+            color: #6b7280;
+
+            margin-bottom: 5px;
+
+        }
+
+
+
+        .ticket-id {
+
+            font-size: 24px;
+
+            font-weight: 700;
+
+            color: #2563eb;
+
+        }
+
+
+
+
+        .dashboard-btn {
+
+            display: inline-block;
+
+            background: #2563eb;
+
+            color: white;
+
+            text-decoration: none;
+
+            padding: 12px 28px;
+
+            border-radius: 6px;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            transition: 0.3s;
+
+        }
+
+
+
+        .dashboard-btn:hover {
+
+            background: #1d4ed8;
+
+        }
+
+
+
+        .footer-text {
+
+            margin-top: 30px;
+
+            font-size: 12px;
+
+            color: #9ca3af;
+
+        }
+
+
+    </style>
+
 
 </head>
+
 
 
 <body>
 
 
-<div style="text-align:center; margin-top:100px;">
+
+<div class="success-card">
 
 
-<h1>
-Complaint Submitted Successfully!
-</h1>
+
+    <div class="success-icon">
+
+        ✓
+
+    </div>
 
 
-<p>
-Your complaint has been registered.
-</p>
+
+    <h1>
+        Complaint Submitted Successfully!
+    </h1>
 
 
-<h2>
-Ticket ID: {{ complaint_id }}
-</h2>
+
+    <p class="message">
+
+        Your complaint has been registered successfully.
+        Our IT team will review it shortly.
+
+    </p>
 
 
-<a href="{{ url_for('employee_dashboard') }}">
-Go to Dashboard
-</a>
+
+
+    <div class="ticket-box">
+
+
+        <div class="ticket-label">
+            Your Ticket ID
+        </div>
+
+
+        <div class="ticket-id">
+    ECMS-{{ complaint_id }}
+</div>
+
+
+    </div>
+
+
+
+
+    <a href="{{ url_for('employee_dashboard') }}" 
+       class="dashboard-btn">
+
+        Go to Dashboard
+
+    </a>
+
+
+
+
+    <div class="footer-text">
+
+        © 2026 Bonanza Satrangi | Employee Complaint Management System
+
+    </div>
+
 
 
 </div>
+
 
 
 </body>

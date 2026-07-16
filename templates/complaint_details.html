@@ -2,22 +2,36 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>ECMS | Complaint Details</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/details.css') }}">
+
 </head>
+
+
 <body>
 
+
     <!-- HEADER -->
+
     <header class="top-header">
+
         <div class="brand">
+
             <img src="{{ url_for('static', filename='images/company_logo.png') }}">
+
             <div>
+
                 <h2>
                     Employee Complaint Management System
                 </h2>
@@ -25,92 +39,151 @@
                 <p>
                     Complaint Details
                 </p>
+
             </div>
+
         </div>
+
+
         <a href="{{ url_for('it_dashboard') }}" class="back-link">
+
             ← Back to Dashboard
+
         </a>
+
+
     </header>
 
 
 
 
     <!-- MAIN -->
+
     <main class="details-page">
+
+
         <div class="page-heading">
+
             <h1>
-                Complaint #ECMS-1001
+
+                Complaint #ECMS-{{ complaint[0] }}
+
             </h1>
+
+
             <p>
+
                 Review complaint information and update status.
+
             </p>
+
+
         </div>
+
+
+
+
 
         <div class="details-layout">
 
 
 
+            <!-- LEFT CARD -->
 
-
-
-
-
-            <!-- LEFT SECTION -->
             <section class="details-card">
+
+
                 <div class="section-title">
+
                     <h2>
                         Complaint Information
                     </h2>
+
                 </div>
 
+
+
                 <div class="detail-grid">
+
+
+
                     <div>
+
                         <label>
                             Employee Name
                         </label>
+
                         <p>
-                            Ahmed Khan
+                            {{ complaint[1] }}
                         </p>
+
                     </div>
+
+
+
+
                     <div>
+
                         <label>
                             Employee ID
                         </label>
+
                         <p>
-                            EMP002
+                            {{ complaint[2] }}
                         </p>
+
                     </div>
 
+
+
+
                     <div>
+
                         <label>
                             Department
                         </label>
 
                         <p>
-                            Sales Department
+                            {{ complaint[3] }}
                         </p>
+
                     </div>
 
+
+
+
+
                     <div>
+
                         <label>
                             Category
                         </label>
 
                         <p>
-                            Hardware
+                            {{ complaint[4] }}
                         </p>
 
                     </div>
 
+
+
+
+
                     <div>
+
                         <label>
                             Priority
                         </label>
 
                         <p>
-                            High
+                            {{ complaint[5] }}
                         </p>
+
                     </div>
+
+
+
+
 
                     <div>
 
@@ -119,79 +192,202 @@
                         </label>
 
                         <p>
-                            10 July 2026
+                            {{ complaint[10] }}
                         </p>
 
                     </div>
+
+
+
+
                 </div>
 
+
+
+
+
                 <div class="description-box">
+
+
+                    <label>
+                        Issue Title
+                    </label>
+
+
+                    <p>
+                        {{ complaint[6] }}
+                    </p>
+
+
+                </div>
+
+
+
+
+
+
+
+                <div class="description-box">
+
 
                     <label>
                         Complaint Description
                     </label>
 
+
                     <p>
-                        Laptop is not starting. Employee tried restarting
-                        but system is not responding.
+                        {{ complaint[7] }}
                     </p>
+
+
                 </div>
 
+
+
+
+
+
+
                 <div class="attachment-box">
-                    <label>
-                        Attachment</label>
-                    <p>
-                        No attachment uploaded.
-                    </p>
+                    <label>Attachment</label>
+
+                    {% if complaint[11] %}
+
+                    <a href="{{ url_for('static', filename='uploads/' + complaint[11]) }}" target="_blank">
+                        View Attachment
+                    </a>
+
+                    {% else %}
+
+                    <p>No attachment uploaded.</p>
+
+                    {% endif %}
                 </div>
+
+
+
             </section>
 
 
 
 
-            
 
-            <!-- RIGHT SECTION -->
+            <!-- RIGHT CARD -->
+
             <section class="action-card">
+
+
+
                 <div class="section-title">
+
                     <h2>
                         Update Complaint
                     </h2>
+
                 </div>
-                <form>
+
+
+
+
+
+                <form method="POST">
+
+
+
                     <div class="form-group">
+
+
                         <label>
                             Change Status
                         </label>
-                        <select>
-                            <option>
+
+
+
+                        <select name="status">
+
+
+                            <option value="Pending" {% if complaint[8]=="Pending" %}selected{% endif %}>
                                 Pending
                             </option>
-                            <option>
+
+
+
+                            <option value="In Progress" {% if complaint[8]=="In Progress" %}selected{% endif %}>
                                 In Progress
                             </option>
-                            <option>
+
+
+
+                            <option value="Resolved" {% if complaint[8]=="Resolved" %}selected{% endif %}>
                                 Resolved
                             </option>
+
+
                         </select>
+
+
+
                     </div>
+
+
+
+
+
+
                     <div class="form-group">
+
+
                         <label>
                             Add Remarks
                         </label>
-                        <textarea rows="6" placeholder="Write update remarks..."></textarea>
+
+
+
+                        <textarea name="remarks" rows="6"
+                            placeholder="Write update remarks...">{{ complaint[9] if complaint[9] else "" }}</textarea>
+
+
+
                     </div>
 
+
+
+
+
+
+
                     <button type="submit">
+
                         Save Changes
+
                     </button>
+
+
+
                 </form>
+
+
+
             </section>
+
+
+
         </div>
+
+
     </main>
+
+
+
+
+
     <footer>
+
         © 2026 Bonanza Satrangi | Employee Complaint Management System
+
     </footer>
+
+
 
 </body>
 
