@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reports & Analytics</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/reports.css') }}">
+
+</head>
+
+<body>
+<div class="page-header">
+
+    <h1 class="page-title">
+        Employee Complaint Reports
+    </h1>
+
+    <a href="{{ url_for('it_dashboard') }}" class="back-btn">
+        ← Back to Dashboard
+    </a>
+
+</div>
+    <!-- ==========================
+         Report Filter
+    =========================== -->
+
+    <div class="filter-box">
+
+        <form id="filterForm"
+              method="GET"
+              action="{{ url_for('reports') }}">
+
+            <label for="period">
+                <strong>Report Period</strong>
+            </label>
+
+            <select id="period"
+                    name="period"
+                    onchange="document.getElementById('filterForm').submit()">
+
+                <option value="all"
+                    {% if period=="all" %}selected{% endif %}>
+                    All Time
+                </option>
+
+                <option value="today"
+                    {% if period=="today" %}selected{% endif %}>
+                    Today
+                </option>
+
+                <option value="yesterday"
+                    {% if period=="yesterday" %}selected{% endif %}>
+                    Yesterday
+                </option>
+
+                <option value="week"
+                    {% if period=="week" %}selected{% endif %}>
+                    Last 7 Days
+                </option>
+
+                <option value="month"
+                    {% if period=="month" %}selected{% endif %}>
+                    This Month
+                </option>
+
+                <option value="lastmonth"
+                    {% if period=="lastmonth" %}selected{% endif %}>
+                    Last Month
+                </option>
+
+                <option value="year"
+                    {% if period=="year" %}selected{% endif %}>
+                    This Year
+                </option>
+
+                <option value="lastyear"
+                    {% if period=="lastyear" %}selected{% endif %}>
+                    Last Year
+                </option>
+
+            </select>
+
+        </form>
+
+    </div>
+
+    <!-- ==========================
+         Summary Cards
+    =========================== -->
+
+    <div class="summary">
+
+        <div class="card">
+            <h3>Total Complaints</h3>
+            <h1>{{ total }}</h1>
+        </div>
+
+        <div class="card">
+            <h3>Resolved</h3>
+            <h1>{{ resolved }}</h1>
+        </div>
+
+        <div class="card">
+            <h3>Pending</h3>
+            <h1>{{ pending }}</h1>
+        </div>
+
+        <div class="card">
+            <h3>In Progress</h3>
+            <h1>{{ progress }}</h1>
+        </div>
+
+    </div>
+
+    <!-- ==========================
+         Export Buttons
+    =========================== -->
+
+<div class="actions">
+
+    <a href="{{ url_for('export_pdf', period=period) }}" class="action-btn">
+        Export PDF
+    </a>
+
+    <a href="{{ url_for('export_excel', period=period) }}" class="action-btn excel">
+        Export Excel
+    </a>
+
+</div>
+
+    <!-- ==========================
+         Complaint Table
+    =========================== -->
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+                    <th>Employee</th>
+                    <th>Department</th>
+                    <th>Category</th>
+                    <th>Priority</th>
+                    <th>Issue</th>
+                    <th>Status</th>
+                    <th>Date Submitted</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% if complaints %}
+
+                    {% for c in complaints %}
+
+                    <tr>
+
+                        <td>ECMS-{{ c[0] }}</td>
+
+                        <td>{{ c[1] }}</td>
+
+                        <td>{{ c[2] }}</td>
+
+                        <td>{{ c[3] }}</td>
+
+                        <td>{{ c[4] }}</td>
+
+                        <td>{{ c[5] }}</td>
+
+                        <td>
+
+                            {% if c[6] == "Resolved" %}
+
+                                <span class="status resolved">
+                                    {{ c[6] }}
+                                </span>
+
+                            {% elif c[6] == "Pending" %}
+
+                                <span class="status pending">
+                                    {{ c[6] }}
+                                </span>
+
+                            {% else %}
+
+                                <span class="status progress">
+                                    {{ c[6] }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>{{ c[7] }}</td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <tr>
+
+                        <td colspan="8"
+                            style="text-align:center;padding:25px;">
+
+                            No complaints found for the selected period.
+
+                        </td>
+
+                    </tr>
+
+                {% endif %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
