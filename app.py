@@ -647,7 +647,21 @@ def reports():
 
     elif period == "custom":
 
-        period_name = "Custom Range"
+        if from_date and to_date:
+
+            period_name = f"{from_date} to {to_date}"
+
+        elif from_date:
+
+            period_name = f"From {from_date}"
+
+        elif to_date:
+
+            period_name = f"Until {to_date}"
+
+        else:
+
+            period_name = "Custom Range"
 
         conditions = []
 
@@ -1046,7 +1060,21 @@ def export_pdf():
     elif period == "custom":
 
 
-        period_name = "Custom Range"
+        if from_date and to_date:
+
+            period_name = f"{from_date} to {to_date}"
+
+        elif from_date:
+
+            period_name = f"From {from_date}"
+
+        elif to_date:
+
+            period_name = f"Until {to_date}"
+
+        else:
+
+            period_name = "Custom Range"
 
 
         conditions = []
@@ -2151,7 +2179,21 @@ def export_excel():
     elif period=="custom":
 
 
-        period_name="Custom Range"
+        if from_date and to_date:
+
+            period_name = f"{from_date} to {to_date}"
+
+        elif from_date:
+
+            period_name = f"From {from_date}"
+
+        elif to_date:
+
+            period_name = f"Until {to_date}"
+
+        else:
+
+            period_name = "Custom Range"
 
 
         conditions=[]
