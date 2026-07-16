@@ -74,17 +74,14 @@ Employee Complaint Management System/
 ```
 
 ## Screenshots
-No live demo is available yet, so this section is reserved for screenshots of the application. Add the images below once they are captured from a running instance of the system.
+No live demo is available yet.
 
-### Placeholder screenshots
 - Login page: `static/images/screenshots/login-page.png`
 - Employee dashboard: `static/images/screenshots/employee-dashboard.png`
 - Complaint form: `static/images/screenshots/complaint-form.png`
 - Complaint details page: `static/images/screenshots/complaint-details.png`
 - IT dashboard: `static/images/screenshots/it-dashboard.png`
 - Reports page: `static/images/screenshots/reports.png`
-
-If you prefer, replace the file names above with your own screenshot names and keep the same folder structure for consistency.
 
 ## Prerequisites
 - Python 3.10 or newer.
