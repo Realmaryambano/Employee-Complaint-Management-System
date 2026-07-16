@@ -2,88 +2,95 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>ECMS | My Complaints</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/complaints.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mycomplaints.css') }}">
 
 </head>
-<body>
 
+<body>
 
     <!-- HEADER -->
 
     <header class="top-header">
+
         <div class="brand">
+
             <img src="{{ url_for('static', filename='images/company_logo.png') }}">
+
             <div>
 
-                <h2>
-                    Employee Complaint Management System
-                </h2>
+                <h2>Employee Complaint Management System</h2>
 
-                <p>
-                    My Complaints
-                </p>
+                <p>My Complaints</p>
 
             </div>
 
         </div>
-        <a href="{{ url_for('employee_dashboard') }}" class="back-link">
+
+        <a href="{{ url_for('employee_dashboard') }}" class="logout-btn">
+
             ← Dashboard
+
         </a>
 
-
     </header>
+
+
+
     <!-- MAIN -->
 
-    <main class="complaints-page">
+    <main class="admin-page">
+
         <div class="page-heading">
 
-            <h1>
-                My Complaints
-            </h1>
-
+            <h1>My Complaints</h1>
 
             <p>
-                Track the progress of your submitted complaints.
+                View and track all complaints submitted by you.
             </p>
 
-
         </div>
-        <!-- SEARCH AREA -->
 
 
-        <div class="filter-box">
-
-            <input type="text" placeholder="Search complaint...">
 
 
-            <select>
 
-                <option>
+        <form class="filter-box" method="GET" action="{{ url_for('my_complaints') }}">
+
+
+            <input type="text" name="search" placeholder="Search by Subject" value="{{ search or '' }}">
+
+
+            <select name="status">
+
+                <option value="">
                     All Status
                 </option>
 
 
-                <option>
+                <option value="Pending" {% if status_filter=="Pending" %}selected{% endif %}>
                     Pending
                 </option>
 
 
-                <option>
+                <option value="In Progress" {% if status_filter=="In Progress" %}selected{% endif %}>
                     In Progress
                 </option>
 
 
-                <option>
+                <option value="Resolved" {% if status_filter=="Resolved" %}selected{% endif %}>
                     Resolved
                 </option>
 
@@ -91,191 +98,150 @@
             </select>
 
 
-        </div>
+            <button type="submit" class="view-btn">
+                Search
+            </button>
 
+
+        </form>
         <!-- TABLE -->
-
 
         <div class="table-container">
 
-
             <table>
-
 
                 <thead>
 
-
                     <tr>
 
-                        <th>
-                            Ticket ID
-                        </th>
-
-
-                        <th>
-                            Subject
-                        </th>
-
-
-                        <th>
-                            Category
-                        </th>
-
-
-                        <th>
-                            Date
-                        </th>
-
-
-                        <th>
-                            Status
-                        </th>
-
-
-                        <th>
-                            Remarks
-                        </th>
-
+                        <th>Ticket ID</th>
+                        <th>Subject</th>
+                        <th>Category</th>
+                        <th>Priority</th>
+                        <th>Date Submitted</th>
+                        <th>Status</th>
+                        <th>Remarks</th>
 
                     </tr>
-
 
                 </thead>
 
                 <tbody>
 
+                    {% if complaints %}
 
+                    {% for complaint in complaints %}
 
                     <tr>
 
-
                         <td>
-                            ECMS-1001
+
+                            ECMS-{{ complaint[0] }}
+
                         </td>
 
-
                         <td>
-                            Laptop not starting
+
+                            {{ complaint[1] }}
+
                         </td>
 
-
                         <td>
-                            Hardware
+
+                            {{ complaint[2] }}
+
                         </td>
 
-
                         <td>
-                            10 July 2026
+
+                            {{ complaint[3] }}
+
                         </td>
 
+                        <td>
+
+                            {{ complaint[4] }}
+
+                        </td>
 
                         <td>
+                            {% if complaint[5] == "Pending" %}
 
                             <span class="status pending">
+
                                 Pending
+
                             </span>
 
-                        </td>
-
-
-                        <td>
-                            Waiting for IT review
-                        </td>
-
-
-                    </tr>
-
-                    <tr>
-
-
-                        <td>
-                            ECMS-1002
-                        </td>
-
-
-                        <td>
-                            Email access issue
-                        </td>
-
-
-                        <td>
-                            Access
-                        </td>
-
-
-                        <td>
-                            08 July 2026
-                        </td>
-
-
-                        <td>
+                            {% elif complaint[5] == "In Progress" %}
 
                             <span class="status progress">
+
                                 In Progress
+
                             </span>
 
-                        </td>
-
-
-                        <td>
-                            Assigned to IT Team
-                        </td>
-
-
-                    </tr>
-                    <tr>
-
-
-                        <td>
-                            ECMS-0998
-                        </td>
-
-
-                        <td>
-                            Printer problem
-                        </td>
-
-
-                        <td>
-                            Hardware
-                        </td>
-
-
-                        <td>
-                            01 July 2026
-                        </td>
-
-
-                        <td>
+                            {% else %}
 
                             <span class="status resolved">
+
                                 Resolved
+
                             </span>
 
+                            {% endif %}
 
                         </td>
-
 
                         <td>
-                            Printer driver updated
+
+                            {% if complaint[6] %}
+
+                            {{ complaint[6] }}
+
+                            {% else %}
+
+                            <span style="color:#94A3B8;">
+                                No remarks yet
+                            </span>
+
+                            {% endif %}
+
                         </td>
 
+                    </tr>
+
+                    {% endfor %}
+
+                    {% else %}
+
+                    <tr>
+
+                        <td colspan="7" class="no-data">
+
+                            No complaints submitted yet.
+
+                        </td>
 
                     </tr>
-                </tbody>
 
+                    {% endif %}
+
+                </tbody>
 
             </table>
 
-
         </div>
     </main>
+
+    <!-- FOOTER -->
 
     <footer>
 
         © 2026 Bonanza Satrangi | Employee Complaint Management System
 
     </footer>
+
 </body>
 
 </html>
