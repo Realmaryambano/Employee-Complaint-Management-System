@@ -31,10 +31,6 @@
     </div>
 
 
-
-    <!-- ==========================
-     Report Filter
-=========================== -->
 <!-- ==========================
      Report Filter
 =========================== -->
@@ -56,54 +52,6 @@
     <select id="period"
             name="period"
             onchange="toggleCustomRange(); this.form.submit();">
-
-
-        <option value="all"
-        {% if period=="all" %}selected{% endif %}>
-            All Time
-        </option>
-
-
-        <option value="today"
-        {% if period=="today" %}selected{% endif %}>
-            Today
-        </option>
-
-
-        <option value="yesterday"
-        {% if period=="yesterday" %}selected{% endif %}>
-            Yesterday
-        </option>
-
-
-        <option value="week"
-        {% if period=="week" %}selected{% endif %}>
-            Last 7 Days
-        </option>
-
-
-        <option value="month"
-        {% if period=="month" %}selected{% endif %}>
-            This Month
-        </option>
-
-
-        <option value="lastmonth"
-        {% if period=="lastmonth" %}selected{% endif %}>
-            Last Month
-        </option>
-
-
-        <option value="year"
-        {% if period=="year" %}selected{% endif %}>
-            This Year
-        </option>
-
-
-        <option value="lastyear"
-        {% if period=="lastyear" %}selected{% endif %}>
-            Last Year
-        </option>
 
 
         <option value="custom"
