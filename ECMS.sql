@@ -205,6 +205,6 @@ VALUES
 );
 COMMIT;
 select 
-DESC COMPLAINTS
+DESC COMPLAINTS;
 
 SELECT * from complaints;
