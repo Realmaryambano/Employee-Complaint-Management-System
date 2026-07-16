@@ -76,12 +76,17 @@ Employee Complaint Management System/
 ## Screenshots
 No live demo is available yet.
 
-- Login page: `static/images/screenshots/login-page.png`
-- Employee dashboard: `static/images/screenshots/employee-dashboard.png`
-- Complaint form: `static/images/screenshots/complaint-form.png`
-- Complaint details page: `static/images/screenshots/complaint-details.png`
-- IT dashboard: `static/images/screenshots/it-dashboard.png`
-- Reports page: `static/images/screenshots/reports.png`
+![- Login page:](static/images/screenshots/login-page.png)
+---
+![Complaint form](static/images/screenshots/complaint-form.png)
+---
+![Employee dashboard](static/images/screenshots/employee-dashboard.png)
+---
+![Complaint details page](static/images/screenshots/complaint-details.png)
+#### IT Dashboard
+![IT dashboard](static/images/screenshots/it-dashboard.png)
+#### Report
+![Reports page](static/images/screenshots/reports.png)
 
 ## Prerequisites
 - Python 3.10 or newer.
