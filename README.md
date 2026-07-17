@@ -83,7 +83,7 @@ No live demo is available yet.
 #### Complaint Form
 ![Complaint form](static/images/screenshots/complaint-form.png)
 #### Track Complaint
-![Track Complaint](static/images/screenshots/Track-Complaint.png)
+![Track Complaint](static/images/screenshots/track-complaint.png)
 #### Complaint Details
 ![Complaint details page](static/images/screenshots/complaint-details.png)
 #### IT Dashboard
